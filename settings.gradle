@@ -1,0 +1,2 @@
+include ':app', ':http', ':frame', ':adapter'
+rootProject.name='Numeron'
