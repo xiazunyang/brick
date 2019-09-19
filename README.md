@@ -17,3 +17,27 @@
     * 能够精简在申请权限时和Activity之间传递参数和回传参数的代码。  
 * rx
     * 当使用RxJava时，配合frame中的MVP和MVVM框架，能够感知View层的生命周期，并及时作出处理。  
+    
+    
+### 在自己的工程中使用
+
+1. 在工程根目录下的build.gradle文件中添加以下代码，如果已存在，则忽略此步。
+
+```
+    allprojects {
+        repositories {
+            ...
+            maven { url 'https://jitpack.io' }
+        }
+    }
+```
+
+2. 添加依赖：
+
+模块 | 依赖
+---------| -------------
+adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
+frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.0'
+http | implementation 'com.github.xiazunyang.numeron:http:1.0.0'
+result | implementation 'com.github.xiazunyang.numeron:result:1.0.0'
+rx | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
