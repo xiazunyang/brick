@@ -10,7 +10,7 @@
     * 如果有多种布局，请重写getItemViewType()方法，并将布局ID作为返回值。
     
 * SpaceItemDecoration
-    * 为RecyclerView的每个Item四个设置一个距离。
+    * 为RecyclerView的每个Item四周设置一个距离。
     
 * DiffUtil
     * 当RecyclerView的列表发生变化时，使用此工具来对比差异，通过调用dispatchUpdatesTo()方法来处理动画
