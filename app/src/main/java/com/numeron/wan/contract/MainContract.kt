@@ -30,6 +30,10 @@ class MainViewModel : AbstractViewModel<MainView, MainModel>() {
                 e.printStackTrace()
                 Result.failure<List<WeChatAuthor>>(e)
             }
+//            以上代码可以使用以下方式简写
+//            val result = kotlin.runCatching {
+//                model.getWeChatAuthor().result
+//            }
             //通知View关闭等待框并向View层传递结果
             view.hideLoading()
             view.onGotWeChatAuthors(result)

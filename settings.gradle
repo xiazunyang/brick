@@ -1,2 +1,2 @@
-include ':app', ':http', ':frame', ':adapter'
+include ':app', ':http', ':frame', ':adapter', ':result', ':rx'
 rootProject.name='Numeron'

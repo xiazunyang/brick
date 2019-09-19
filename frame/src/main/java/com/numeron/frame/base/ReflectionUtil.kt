@@ -1,5 +1,6 @@
 package com.numeron.frame.base
 
+import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 /**
@@ -13,7 +14,7 @@ fun Type.isSubclass(targetClass: Class<*>): Boolean {
             if (superclass == targetClass) {
                 return true
             }
-            if (clazz.interfaces.any { it == targetClass }) {
+            if (clazz.interfaces.contains(targetClass)) {
                 return true
             }
             clazz = superclass
@@ -21,3 +22,20 @@ fun Type.isSubclass(targetClass: Class<*>): Boolean {
     }
     return false
 }
+
+/**
+ * 获取Class中所有指定了泛型的父类
+ */
+val Class<*>.allGenericSuperclass: List<Class<*>>
+    get() {
+        val list = mutableListOf<Class<*>>()
+        var clazz: Class<*>? = this
+        while (clazz != null) {
+            val superclass = clazz.genericSuperclass
+            if (superclass is ParameterizedType) {
+                list.add(clazz)
+            }
+            clazz = clazz.superclass
+        }
+        return list
+    }

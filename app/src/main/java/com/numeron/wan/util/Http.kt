@@ -13,11 +13,12 @@ object Http : AbstractHttpUtil(), IRetrofit {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
     }
 
-    override fun <T> create(clazz: Class<T>): T = retrofit.create(clazz)
-
     override val baseUrl: String = "https://wanandroid.com/"
+
+    override fun <T> create(clazz: Class<T>): T = retrofit.create(clazz)
 
     override val interceptors = listOf(httpLoggingInterceptor)
 
     override val convertersFactories = listOf(GsonConverterFactory.create())
+
 }

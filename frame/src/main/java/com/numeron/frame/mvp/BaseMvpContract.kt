@@ -1,8 +1,6 @@
 package com.numeron.frame.mvp
 
-import com.numeron.frame.base.IModel
-import com.numeron.frame.base.IRetrofit
-import com.numeron.frame.base.isSubclass
+import com.numeron.frame.base.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import java.lang.reflect.ParameterizedType
@@ -36,13 +34,15 @@ abstract class BasePresenter<out V : IView<BasePresenter<V, M>>, out M : IModel>
 @Suppress("UNCHECKED_CAST")
 inline fun <reified V : IView<P>, P : BasePresenter<V, M>, M : IModel> V.createPresenter(retrofit: IRetrofit): P {
 
-    //获取View层父类带有泛型参数的Type
-    val abstractViewClass = javaClass.genericSuperclass as ParameterizedType
+    //获取View层父类中实现了IView接口并且带有泛型参数的Type
+    val abstractViewType = javaClass.allGenericSuperclass.first {
+        it.isSubclass(IView::class.java)
+    }.genericSuperclass as ParameterizedType
 
     //从泛型参数中获取Presenter的Class
-    val presenterImplClass = abstractViewClass.actualTypeArguments.first {
+    val presenterImplClass = abstractViewType.actualTypeArguments.first {
         it.isSubclass(BasePresenter::class.java)
-    } as Class<*>
+    } as Class<P>
 
     //获取Presenter层带有泛型参数的Type
     val basePresenterClass = presenterImplClass.genericSuperclass as ParameterizedType
@@ -67,8 +67,8 @@ inline fun <reified V : IView<P>, P : BasePresenter<V, M>, M : IModel> V.createP
                 constructor.newInstance(*it) as M
             }
 
-    val presenter = presenterImplClass.newInstance() as P
-
+    //使用反射创建Presenter实例
+    val presenter = presenterImplClass.newInstance()
 
     //为Presenter的Model层赋值
     presenter.model = model

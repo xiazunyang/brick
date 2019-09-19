@@ -4,9 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.numeron.frame.base.IModel
-import com.numeron.frame.base.isSubclass
-import com.numeron.frame.base.IRetrofit
+import com.numeron.frame.base.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import java.lang.reflect.ParameterizedType
@@ -40,12 +38,14 @@ abstract class AbstractViewModel<out V : IView<AbstractViewModel<V, M>>, out M :
 inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.createViewModel(retrofit: IRetrofit): VM {
 
     //获取View层父类带有泛型参数的Type
-    val abstractViewClass = javaClass.genericSuperclass as ParameterizedType
+    val abstractViewClass = javaClass.allGenericSuperclass.first {
+        it.isSubclass(IView::class.java)
+    }.genericSuperclass as ParameterizedType
 
     //从泛型参数中获取ViewModel的Class
     val viewModelImplClass = abstractViewClass.actualTypeArguments.first {
         it.isSubclass(AbstractViewModel::class.java)
-    } as Class<*>
+    } as Class<VM>
 
     //获取ViewModel层带有泛型参数的Type
     val baseViewModelClass = viewModelImplClass.genericSuperclass as ParameterizedType
@@ -70,15 +70,12 @@ inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.c
                 constructor.newInstance(*it) as M
             }
 
-    //将ViewModel的Class从Class<*>强转为Class<out ViewModel>类型
-    val viewModelClass = viewModelImplClass.asSubclass(ViewModel::class.java)
-
     //创建ViewModel的实例
     val viewModel = when (this) {
-        is Fragment -> ViewModelProviders.of(this).get(viewModelClass)
-        is FragmentActivity -> ViewModelProviders.of(this).get(viewModelClass)
+        is Fragment -> ViewModelProviders.of(this).get(viewModelImplClass)
+        is FragmentActivity -> ViewModelProviders.of(this).get(viewModelImplClass)
         else -> throw IllegalArgumentException("Fragment和FragmentActivity以外的类型暂时不能支持ViewModel")
-    } as VM
+    }
 
     //为ViewModel的Model层赋值
     viewModel.model = model
