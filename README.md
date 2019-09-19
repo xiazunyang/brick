@@ -35,8 +35,8 @@
 2. 添加依赖：
 
 模块 | 依赖
----------| -------------
-adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
+---|---
+adapter | implementation 'com.github.xiazunyang.numeron:adapter:1.0.0'
 frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.0'
 http | implementation 'com.github.xiazunyang.numeron:http:1.0.0'
 result | implementation 'com.github.xiazunyang.numeron:result:1.0.0'
