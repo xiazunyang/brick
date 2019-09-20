@@ -35,7 +35,7 @@ abstract class AbstractViewModel<out V : IView<AbstractViewModel<V, M>>, out M :
  * @param retrofit IRetrofit 创建Http Api实例的工具类，如果使用自己的HTTP工具类，请实现手动实现此接口
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.createViewModel(retrofit: IRetrofit): VM {
+inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.createViewModel(retrofit: IRetrofit? = null): VM {
 
     //获取View层父类带有泛型参数的Type
     val abstractViewClass = javaClass.allGenericSuperclass.first {
@@ -59,16 +59,21 @@ inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.c
     val constructor = modelImplClass.constructors.first()
 
     //获取构造函数的参数
-    val model = constructor.parameterTypes
-            .map {
-                //通过Retrofit创建Http Api的实例
-                retrofit.create(it)
-            }
-            .toTypedArray()
-            .let {
-                //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
-                constructor.newInstance(*it) as M
-            }
+    val parameters = constructor.parameterTypes
+    val model = if (parameters.isEmpty() || retrofit == null) {
+        constructor.newInstance()
+    } else {
+        parameters
+                .map {
+                    //通过Retrofit创建Http Api的实例
+                    retrofit.create(it)
+                }
+                .toTypedArray()
+                .let {
+                    //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
+                    constructor.newInstance(*it)
+                }
+    } as M
 
     //创建ViewModel的实例
     val viewModel = when (this) {
