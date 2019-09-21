@@ -16,7 +16,7 @@
 * result
     * 能够精简在申请权限时和Activity之间传递参数和回传参数的代码。  
 * rx
-    * 当使用RxJava时，配合frame中的MVP和MVVM框架，能够感知View层的生命周期，并及时作出处理。  
+    * 当使用RxJava时，配合frame中的MVP和MVVM框架，能够感知View层的生命周期，并及时作出处理，防止内存泄漏。  
     
     
 ### 在自己的工程中使用
@@ -35,7 +35,7 @@
 2. 添加依赖：
 
 模块 | 依赖
----------| -------------
+---|---
 adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
 frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.0'
 http | implementation 'com.github.xiazunyang.numeron:http:1.0.0'

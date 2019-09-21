@@ -3,6 +3,7 @@ package com.numeron.wan.util
 import com.numeron.frame.base.IRetrofit
 import com.numeron.http.AbstractHttpUtil
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object Http : AbstractHttpUtil(), IRetrofit {
@@ -20,5 +21,7 @@ object Http : AbstractHttpUtil(), IRetrofit {
     override val interceptors = listOf(httpLoggingInterceptor)
 
     override val convertersFactories = listOf(GsonConverterFactory.create())
+
+    override val callAdapterFactories = listOf(RxJava2CallAdapterFactory.create())
 
 }
