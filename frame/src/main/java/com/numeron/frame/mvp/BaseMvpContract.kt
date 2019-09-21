@@ -8,7 +8,7 @@ import java.lang.reflect.ParameterizedType
 /**
  * MVP模式下的View层的基类，持有一个Presenter对象
  */
-interface IView<out P : BasePresenter<IView<P>, IModel>> : com.numeron.frame.base.IView {
+interface IView<out P : AbstractPresenter<IView<P>, IModel>> : com.numeron.frame.base.IView {
 
     val presenter: P
 
@@ -17,7 +17,7 @@ interface IView<out P : BasePresenter<IView<P>, IModel>> : com.numeron.frame.bas
 /**
  * MVP模式下的Presenter层的基类，持有View层的接口与Model层的实例
  */
-abstract class BasePresenter<out V : IView<BasePresenter<V, M>>, out M : IModel> : CoroutineScope by MainScope() {
+abstract class AbstractPresenter<out V : IView<AbstractPresenter<V, M>>, out M : IModel> : CoroutineScope by MainScope() {
 
     lateinit var view: @UnsafeVariance V
     lateinit var model: @UnsafeVariance M
@@ -32,7 +32,7 @@ abstract class BasePresenter<out V : IView<BasePresenter<V, M>>, out M : IModel>
  * @param retrofit IRetrofit 创建Http Api实例的工具类，如果使用自己的HTTP工具类，请实现手动实现此接口
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified V : IView<P>, P : BasePresenter<V, M>, M : IModel> V.createPresenter(retrofit: IRetrofit): P {
+inline fun <reified V : IView<P>, P : AbstractPresenter<V, M>, M : IModel> V.createPresenter(retrofit: IRetrofit? = null): P {
 
     //获取View层父类中实现了IView接口并且带有泛型参数的Type
     val abstractViewType = javaClass.allGenericSuperclass.first {
@@ -41,7 +41,7 @@ inline fun <reified V : IView<P>, P : BasePresenter<V, M>, M : IModel> V.createP
 
     //从泛型参数中获取Presenter的Class
     val presenterImplClass = abstractViewType.actualTypeArguments.first {
-        it.isSubclass(BasePresenter::class.java)
+        it.isSubclass(AbstractPresenter::class.java)
     } as Class<P>
 
     //获取Presenter层带有泛型参数的Type
@@ -56,16 +56,21 @@ inline fun <reified V : IView<P>, P : BasePresenter<V, M>, M : IModel> V.createP
     val constructor = modelImplClass.constructors.first()
 
     //获取构造函数的参数
-    val model = constructor.parameterTypes
-            .map {
-                //通过Retrofit创建Http Api的实例
-                retrofit.create(it)
-            }
-            .toTypedArray()
-            .let {
-                //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
-                constructor.newInstance(*it) as M
-            }
+    val parameters = constructor.parameterTypes
+    val model = if (parameters.isEmpty() || retrofit == null) {
+        constructor.newInstance()
+    } else {
+        parameters
+                .map {
+                    //通过Retrofit创建Http Api的实例
+                    retrofit.create(it)
+                }
+                .toTypedArray()
+                .let {
+                    //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
+                    constructor.newInstance(*it)
+                }
+    } as M
 
     //使用反射创建Presenter实例
     val presenter = presenterImplClass.newInstance()
