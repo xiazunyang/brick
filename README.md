@@ -36,8 +36,8 @@
 
 模块 | 依赖
 ---|---
-adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
-frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.0'
-http | implementation 'com.github.xiazunyang.numeron:http:1.0.0'
-result | implementation 'com.github.xiazunyang.numeron:result:1.0.0'
-rx | implementation 'com.github.xiazunyang.numeron:rx:1.0.0'
+adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.1'
+frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.1'
+http | implementation 'com.github.xiazunyang.numeron:http:1.0.1'
+result | implementation 'com.github.xiazunyang.numeron:result:1.0.1'
+rx | implementation 'com.github.xiazunyang.numeron:rx:1.0.1'
