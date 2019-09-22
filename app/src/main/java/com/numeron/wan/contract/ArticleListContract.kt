@@ -33,7 +33,7 @@ class ArticleListViewModel : AbstractViewModel<ArticleListView, ArticleListModel
     fun refreshList() {
         RxPagedListBuilder(ArticleListFactory(), 10)
                 .buildObservable()
-                .subscribe(articleListLiveData::postValue)
+                .subscribe(articleListLiveData::setValue)
     }
 
     private inner class ArticleListFactory : DataSource.Factory<Int, Article>() {

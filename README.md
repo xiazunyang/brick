@@ -5,7 +5,7 @@
 * app
     * 示例工程
 * adapter
-    * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/activity/MainActivity.kt#L55))。
+    * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/activity/MainActivity.kt#L62))。
     * 另外提供列表差异对比并自动处理动画的工具([查看实现](https://github.com/xiazunyang/numeron/blob/master/adapter/src/main/java/com/numeron/adapter/ItemDiffCallback.kt))。
 * frame
     * MVP或MVVM架构，对外提供IView接口方便其它项目实现自己的抽象View层。

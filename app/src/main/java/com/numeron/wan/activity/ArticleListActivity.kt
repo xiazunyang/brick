@@ -63,7 +63,7 @@ class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleList
         )
     }
 
-    inner class Adapter : PagedBindingAdapter<Article, RecyclerItemArticleListBinding>(R.layout.recycler_item_article_list) {
+    private inner class Adapter : PagedBindingAdapter<Article, RecyclerItemArticleListBinding>(R.layout.recycler_item_article_list) {
 
         override fun onBindViewHolder(holder: DataBindingViewHolder<RecyclerItemArticleListBinding>, position: Int) {
             val article = getItem(position) ?: return

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
             name="weChatAuthor"
             type="com.numeron.wan.entity.WeChatAuthor" />
+
+        <variable
+            name="listeners"
+            type="com.numeron.wan.activity.MainActivity.Listeners" />
 
     </data>
 
@@ -15,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_item_recycler_we_chat_author_main_activity"
+        android:onClick="@{() -> listeners.onWeChatAuthorItemClick(weChatAuthor)}"
         android:padding="4dp"
         android:text="@{weChatAuthor.name}"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
 </layout>

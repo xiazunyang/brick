@@ -22,6 +22,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AbsMvvmActivity<MainViewModel>(), MainView {
 
+    private val listeners = Listeners()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //使用DataBinding
@@ -62,11 +64,17 @@ class MainActivity : AbsMvvmActivity<MainViewModel>(), MainView {
         override fun onBindViewHolder(holder: DataBindingViewHolder<RecyclerItemWeChatAuthorListBinding>, position: Int) {
             val weChatAuthor = list[position]
             holder.binding.weChatAuthor = weChatAuthor
+            holder.binding.listeners = listeners
             holder.binding.executePendingBindings()
-            holder.itemView.setOnClickListener {
-                startActivity<ArticleListActivity>(EXTRA_AUTHOR_ID to weChatAuthor.id)
-            }
         }
+    }
+
+    inner class Listeners {
+
+        fun onWeChatAuthorItemClick(weChatAuthor: WeChatAuthor) {
+            startActivity<ArticleListActivity>(EXTRA_AUTHOR_ID to weChatAuthor.id)
+        }
+
     }
 
 }
