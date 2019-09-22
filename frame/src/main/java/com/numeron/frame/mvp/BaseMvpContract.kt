@@ -16,6 +16,7 @@ interface IView<out P : AbstractPresenter<IView<P>, IModel>> : com.numeron.frame
 
 /**
  * MVP模式下的Presenter层的基类，持有View层的接口与Model层的实例
+ * 此抽象类的子类必需有且只有一个无参构造方法，否则[createPresenter]方法不能正常创建对象
  */
 abstract class AbstractPresenter<out V : IView<AbstractPresenter<V, M>>, out M : IModel> : CoroutineScope by MainScope() {
 
@@ -62,15 +63,11 @@ inline fun <reified V : IView<P>, P : AbstractPresenter<V, M>, M : IModel> V.cre
     } else {
         parameters
                 .map {
-                    //通过Retrofit创建Http Api的实例
-                    retrofit.create(it)
+                    retrofit.create(it) //通过Retrofit创建Http Api的实例
                 }
                 .toTypedArray()
-                .let {
-                    //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
-                    constructor.newInstance(*it)
-                }
-    } as M
+                .let(constructor::newInstance)   //将创建的实例传入构造函数来创建Model对象
+    } as M  //转为真实的类型
 
     //使用反射创建Presenter实例
     val presenter = presenterImplClass.newInstance()

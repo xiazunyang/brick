@@ -43,12 +43,18 @@ class ArticleListViewModel : AbstractViewModel<ArticleListView, ArticleListModel
     private inner class ArticleListDataSource : PageKeyedDataSource<Int, Article>() {
 
         override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Article>) {
+            //paging加载第一页数据时会调用此方法，此方法在后台线程中运行
             model.getArticlePagedListByAuthor(1, view.authorId)
-                    .delay(5, TimeUnit.SECONDS)    //在加载数据时，让线程暂停5秒，如果在此之前退出Activity，也不会发生内存泄漏
+                    //在加载数据时，让线程暂停5秒，如果在此之前退出Activity，也不会发生内存泄漏
+                    .delay(5, TimeUnit.SECONDS)
+                    //从JsonResult中取出result
+                    .map(JsonResult<Paged<Article>>::result)
+                    //将Observer的处理线程指定为主线程
+                    //因为要显示等待框、并且加载失败时要将错误传回View层，都需要在主线程才能处理
                     .observeOn(AndroidSchedulers.mainThread())
+                    //LoadingResultObserver会在订阅时显示等待框并在结束时关闭
                     .subscribe(LoadingResultObserver(view, "正在加载文章列表") { result ->
                         result.onFailure(view::onArticleListLoadError)
-                                .map(JsonResult<Paged<Article>>::result)
                                 .onSuccess { paged ->
                                     callback.onResult(paged.data, 0, paged.total, null, 2)
                                 }

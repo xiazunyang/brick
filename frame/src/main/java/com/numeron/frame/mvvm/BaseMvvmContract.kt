@@ -20,6 +20,7 @@ interface IView<out VM : AbstractViewModel<IView<VM>, IModel>> : com.numeron.fra
 
 /**
  * MVVM模式中的ViewModel层基类，持有View层的接口和Model层的实例
+ * 此抽象类的子类必需有且只有一个无参构造方法，否则[createViewModel]方法不能正常创建对象
  */
 abstract class AbstractViewModel<out V : IView<AbstractViewModel<V, M>>, out M : IModel> : ViewModel(), CoroutineScope by MainScope() {
 
@@ -65,15 +66,11 @@ inline fun <reified V : IView<VM>, VM : AbstractViewModel<V, M>, M : IModel> V.c
     } else {
         parameters
                 .map {
-                    //通过Retrofit创建Http Api的实例
-                    retrofit.create(it)
+                    retrofit.create(it) //通过Retrofit创建Http Api的实例
                 }
                 .toTypedArray()
-                .let {
-                    //将创建的实例传入构造函数来创建Model对象，并强转为真实的类型
-                    constructor.newInstance(*it)
-                }
-    } as M
+                .let(constructor::newInstance)  //将创建的实例传入构造函数来创建Model对象
+    } as M  //强转为真实的类型
 
     //创建ViewModel的实例
     val viewModel = when (this) {
