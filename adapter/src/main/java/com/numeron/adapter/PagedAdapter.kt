@@ -9,7 +9,7 @@ import androidx.paging.PagedListAdapter
  * 用于Paging的Adapter，需要传入[layoutId]作为布局
  * 如果该适配器有多种布局，需要重写[getItemViewType]方法，此时[layoutId]参数可忽略
  */
-abstract class PagingAdapter<T>(
+abstract class PagedAdapter<T>(
         @LayoutRes private val layoutId: Int = 0
 ) : PagedListAdapter<T, ViewHolder>(ItemDiffCallback()) {
 

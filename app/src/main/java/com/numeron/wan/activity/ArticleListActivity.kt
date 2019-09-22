@@ -3,22 +3,20 @@ package com.numeron.wan.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.numeron.adapter.PagingAdapter
-import com.numeron.adapter.SpaceItemDecoration
-import com.numeron.adapter.ViewHolder
+import com.numeron.adapter.*
 import com.numeron.wan.R
 import com.numeron.wan.abs.AbsMvvmActivity
 import com.numeron.wan.contract.ArticleListView
 import com.numeron.wan.contract.ArticleListViewModel
+import com.numeron.wan.databinding.ActivityArticleListBinding
+import com.numeron.wan.databinding.RecyclerItemArticleListBinding
 import com.numeron.wan.entity.Article
 import com.numeron.wan.util.EXTRA_AUTHOR_ID
 import com.numeron.wan.util.NegativeButton
 import com.numeron.wan.util.PositiveButton
 import kotlinx.android.synthetic.main.activity_article_list.*
-import kotlinx.android.synthetic.main.item_recycler_article_list_activity.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * 此界面展示了Paging的基本使用方法，并对RxJava的基本使用方法进行了演示。
@@ -31,13 +29,21 @@ class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_article_list)
-        articleSwipeRefreshLayout.setOnRefreshListener(viewModel::refreshList)
+
+        val articleListBinding = DataBindingUtil
+                .setContentView<ActivityArticleListBinding>(this, R.layout.activity_article_list)
+        //绑定viewModel
+        articleListBinding.viewModel = viewModel
+
+        //为articleListRecyclerView设置每个Item之间间隔4dp的ItemDecoration
         val dip = (resources.displayMetrics.density * 4).toInt()
         articleListRecyclerView.addItemDecoration(SpaceItemDecoration(dip))
+        //绑定Adapter
         val adapter = Adapter()
         articleListRecyclerView.adapter = adapter
+        //adapter绑定LiveData
         viewModel.articleListLiveData.observe(this, Observer(adapter::submitList))
+        //获取数据
         viewModel.refreshList()
     }
 
@@ -57,21 +63,17 @@ class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleList
         )
     }
 
-    private inner class Adapter : PagingAdapter<Article>(R.layout.item_recycler_article_list_activity) {
+    inner class Adapter : PagedBindingAdapter<Article, RecyclerItemArticleListBinding>(R.layout.recycler_item_article_list) {
 
-        private val simpleDateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: DataBindingViewHolder<RecyclerItemArticleListBinding>, position: Int) {
             val article = getItem(position) ?: return
-            holder.itemView.run {
-                articleTitleTextView.text = article.title
-                articleAuthorTextView.text = article.author
-                articleDateTextView.text = simpleDateFormat.format(article.publishTime)
-                setOnClickListener {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.link)))
-                }
+            holder.binding.article = article
+            holder.binding.executePendingBindings()
+            holder.itemView.setOnClickListener {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.link)))
             }
         }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.numeron.wan.contract
 
+import androidx.lifecycle.MutableLiveData
 import com.numeron.frame.base.IModel
 import com.numeron.frame.mvvm.AbstractViewModel
 import com.numeron.frame.mvvm.IView
@@ -11,32 +12,28 @@ import retrofit2.http.GET
 
 interface MainView : IView<MainViewModel> {
 
-    fun onGotWeChatAuthors(result: Result<List<WeChatAuthor>>)
+    fun onLoadWeChatAuthorsFailure(throwable: Throwable)
 
 }
 
 
 class MainViewModel : AbstractViewModel<MainView, MainModel>() {
 
+    val weChatAuthorLiveData = MutableLiveData<List<WeChatAuthor>>()
+
     fun getWeChatCreator() {
         launch {
             //通知View显示等待框
             view.showLoading()
-            val result = try {
-                //切换线程获取网络上的数据
-                val list = model.getWeChatAuthor().result
-                Result.success(list)
+            try {
+                //切换线程获取网络上的数据，并将结果放入weChatAuthorLiveData中
+                weChatAuthorLiveData.value = model.getWeChatAuthor().result
             } catch (e: Exception) {
                 e.printStackTrace()
-                Result.failure<List<WeChatAuthor>>(e)
+                view.onLoadWeChatAuthorsFailure(e)
             }
-//            以上代码可以使用以下方式简写
-//            val result = kotlin.runCatching {
-//                model.getWeChatAuthor().result
-//            }
             //通知View关闭等待框并向View层传递结果
             view.hideLoading()
-            view.onGotWeChatAuthors(result)
         }
     }
 

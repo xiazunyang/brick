@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="article"
+            type="com.numeron.wan.entity.Article" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/articleTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="@{article.title}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="想吃透APK的安装原理，这些知识你是逃不掉的" />
+
+        <TextView
+            android:id="@+id/articleAuthorTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{article.author}"
+            app:layout_constraintEnd_toStartOf="@id/articleDateTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/articleTitleTextView"
+            tools:text="郭霖" />
+
+        <TextView
+            android:id="@+id/articleDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bindDate="@{article.publishTime}"
+            app:formatPattern="@{`yyyy年MM月dd日`}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/articleAuthorTextView"
+            app:layout_constraintTop_toTopOf="@id/articleAuthorTextView"
+            tools:text="2019-02-11" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
