@@ -19,6 +19,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
     dataBinding {
         enabled = true
     }
@@ -50,6 +54,7 @@ dependencies {
     implementation project(":rx")
     implementation project(":http")
     implementation project(":frame")
+    implementation project(":brick")
     implementation project(":result")
     implementation project(":adapter")
 
