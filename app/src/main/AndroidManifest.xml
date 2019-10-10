@@ -27,8 +27,6 @@
 
         <activity android:name=".activity.ArticleListActivity" />
 
-        <activity android:name=".activity.TestActivity" />
-
     </application>
 
 </manifest>

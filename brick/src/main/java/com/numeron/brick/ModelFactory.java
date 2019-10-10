@@ -1,7 +1,5 @@
 package com.numeron.brick;
 
-import com.numeron.brick.coroutine.AbstractViewModel;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -96,12 +94,12 @@ public final class ModelFactory {
 
     private <M> Class<M> findModelClass(@NotNull Class<?> clazz) {
         Class<?> superClass = clazz.getSuperclass();
-        if (superClass == com.numeron.brick.AbstractViewModel.class) {
+        if (superClass == AbstractViewModel.class) {
             Type genericSuperclass = clazz.getGenericSuperclass();
             return findModelClass(genericSuperclass);
         }
         try {
-            if (superClass == AbstractViewModel.class) {
+            if (superClass == com.numeron.brick.coroutine.AbstractViewModel.class) {
                 Type genericSuperclass = clazz.getGenericSuperclass();
                 return findModelClass(genericSuperclass);
             }
