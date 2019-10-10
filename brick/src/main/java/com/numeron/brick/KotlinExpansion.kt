@@ -1,6 +1,6 @@
 @file:JvmName("KotlinExpansion")
 
-package com.numeon.brick
+package com.numeron.brick
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

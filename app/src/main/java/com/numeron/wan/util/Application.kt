@@ -1,7 +1,7 @@
 package com.numeron.wan.util
 
 import android.app.Application
-import com.numeon.brick.ModelFactory
+import com.numeron.brick.ModelFactory
 
 class Application : Application() {
 

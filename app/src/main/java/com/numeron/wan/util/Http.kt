@@ -1,6 +1,6 @@
 package com.numeron.wan.util
 
-import com.numeon.brick.IRetrofit
+import com.numeron.brick.IRetrofit
 import com.numeron.http.AbstractHttpUtil
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

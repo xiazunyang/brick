@@ -1,4 +1,4 @@
-package com.numeon.brick;
+package com.numeron.brick;
 
 /**
  * Retrofit中并没有提供相应的接口，所以此接口是对Retrofit中的create方法的代理

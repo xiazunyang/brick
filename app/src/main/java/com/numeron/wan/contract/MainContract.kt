@@ -1,10 +1,9 @@
 package com.numeron.wan.contract
 
 import androidx.lifecycle.MutableLiveData
-import com.numeon.brick.IModel
-import com.numeon.brick.IView
-import com.numeon.brick.coroutine.AbstractViewModel
-import com.numeon.brick.createViewModel
+import com.numeron.brick.IView
+import com.numeron.brick.coroutine.AbstractViewModel
+import com.numeron.brick.createViewModel
 import com.numeron.wan.entity.JsonResult
 import com.numeron.wan.entity.WeChatAuthor
 import kotlinx.coroutines.launch
@@ -44,7 +43,7 @@ class MainViewModel : AbstractViewModel<MainView, MainModel>() {
 }
 
 
-class MainModel(mainApi: MainApi) : IModel, MainApi by mainApi
+class MainModel(mainApi: MainApi): MainApi by mainApi
 
 
 interface MainApi {

@@ -1,6 +1,6 @@
-package com.numeon.brick;
+package com.numeron.brick;
 
-import com.numeon.brick.coroutine.AbstractViewModel;
+import com.numeron.brick.coroutine.AbstractViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,9 +96,16 @@ public final class ModelFactory {
 
     private <M> Class<M> findModelClass(@NotNull Class<?> clazz) {
         Class<?> superClass = clazz.getSuperclass();
-        if (superClass == AbstractViewModel.class || superClass == com.numeon.brick.AbstractViewModel.class) {
+        if (superClass == com.numeron.brick.AbstractViewModel.class) {
             Type genericSuperclass = clazz.getGenericSuperclass();
             return findModelClass(genericSuperclass);
+        }
+        try {
+            if (superClass == AbstractViewModel.class) {
+                Type genericSuperclass = clazz.getGenericSuperclass();
+                return findModelClass(genericSuperclass);
+            }
+        } catch (Throwable ignored) {
         }
         if (superClass != null) {
             return findModelClass(superClass);

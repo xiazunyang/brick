@@ -5,7 +5,7 @@ package com.numeron.wan.abs
 import android.app.ProgressDialog
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.numeon.brick.IView
+import com.numeron.brick.IView
 import com.numeron.wan.util.DialogButton
 import com.numeron.wan.util.NegativeButton
 import com.numeron.wan.util.PositiveButton

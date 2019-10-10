@@ -71,7 +71,8 @@ class MainActivity : AbstractMVVMActivity(), MainView {
     inner class Listeners {
 
         fun onWeChatAuthorItemClick(weChatAuthor: WeChatAuthor) {
-            startActivity<ArticleListActivity>(EXTRA_AUTHOR_ID to weChatAuthor.id)
+//            startActivity<ArticleListActivity>(EXTRA_AUTHOR_ID to weChatAuthor.id)
+            startActivity<TestActivity>()
         }
 
     }

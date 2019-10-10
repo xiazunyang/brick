@@ -1,7 +1,7 @@
-package com.numeon.brick.coroutine
+package com.numeron.brick.coroutine
 
 import androidx.lifecycle.ViewModel
-import com.numeon.brick.*
+import com.numeron.brick.*
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope

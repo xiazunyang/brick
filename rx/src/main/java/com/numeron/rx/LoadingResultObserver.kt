@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.numeon.brick.IView
+import com.numeron.brick.IView
 import io.reactivex.disposables.Disposable
 
 

@@ -2,10 +2,9 @@ package com.numeron.wan.contract
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.*
-import com.numeon.brick.AbstractViewModel
-import com.numeon.brick.IModel
-import com.numeon.brick.IView
-import com.numeon.brick.createViewModel
+import com.numeron.brick.AbstractViewModel
+import com.numeron.brick.IView
+import com.numeron.brick.createViewModel
 import com.numeron.rx.LoadingResultObserver
 import com.numeron.rx.ResultObserver
 import com.numeron.wan.entity.Article
@@ -94,7 +93,7 @@ class ArticleListViewModel : AbstractViewModel<ArticleListView, ArticleListModel
 }
 
 
-class ArticleListModel(api: ArticleListApi) : IModel, ArticleListApi by api
+class ArticleListModel(api: ArticleListApi) : ArticleListApi by api
 
 
 interface ArticleListApi {

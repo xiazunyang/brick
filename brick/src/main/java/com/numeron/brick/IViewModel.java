@@ -1,4 +1,4 @@
-package com.numeon.brick;
+package com.numeron.brick;
 
 import org.jetbrains.annotations.NotNull;
 
