@@ -8,8 +8,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import kotlin.collections.ArraysKt;
-
 @SuppressWarnings("unchecked")
 public final class ModelFactory {
 
@@ -29,6 +27,7 @@ public final class ModelFactory {
      * @see IRetrofit
      * @see retrofit2.Retrofit#create(Class)
      */
+    @SuppressWarnings("JavadocReference")
     public synchronized static void install(@NotNull Object instance) {
         ApiFactory apiFactory = ApiFactory.create(instance);
         modelFactory = new ModelFactory(apiFactory);
@@ -42,13 +41,13 @@ public final class ModelFactory {
      * @return Model层实例。
      */
     @NotNull
-    public static synchronized <M extends IModel, VM extends IViewModel> M create(@NotNull VM viewModel, Object iRetrofit) {
+    public static synchronized <M, VM extends IViewModel> M create(@NotNull VM viewModel, Object iRetrofit) {
         ApiFactory tempApiFactory = ApiFactory.create(iRetrofit);
         return modelFactory.createModel(viewModel.getClass(), tempApiFactory);
     }
 
     @NotNull
-    private <M extends IModel, P extends IViewModel> M createModel(Class<P> viewModelClazz, IRetrofit apiFactory) {
+    private <M, VM extends IViewModel> M createModel(Class<VM> viewModelClazz, IRetrofit apiFactory) {
         try {
             //从ViewModel的实现类的Class中获取Model的Class
             Class<M> modelClazz = findModelClass(viewModelClazz);
@@ -70,20 +69,20 @@ public final class ModelFactory {
      * @param constructor Model层的构造器
      * @return Retrofit Api的实例数组
      */
-    private <M extends IModel> Object[] generateApiInstance(Constructor<M> constructor, IRetrofit iRetrofit) {
+    private <M> Object[] generateApiInstance(Constructor<M> constructor, IRetrofit iRetrofit) {
         if (iRetrofit != null) {
-            return ArraysKt.map(constructor.getParameterTypes(), iRetrofit::create).toArray();
+            return ArrayUtil.map(constructor.getParameterTypes(), iRetrofit::create);
         } else {
-            return ArraysKt.map(constructor.getParameterTypes(), apiFactory::create).toArray();
+            return ArrayUtil.map(constructor.getParameterTypes(), apiFactory::create);
         }
     }
 
-    private <M extends IModel> Constructor<M> findConstructor(Class<M> clazz) {
+    private <M> Constructor<M> findConstructor(Class<M> clazz) {
         Constructor<?>[] constructors = clazz.getConstructors();
         if (apiFactory.isInitialized()) {
-            return (Constructor<M>) ArraysKt.first(constructors, this::allIsInterface);
+            return (Constructor<M>) ArrayUtil.find(constructors, this::allIsInterface);
         } else {
-            return (Constructor<M>) ArraysKt.first(constructors, this::isEmptyArguments);
+            return (Constructor<M>) ArrayUtil.find(constructors, this::isEmptyArguments);
         }
     }
 
@@ -92,10 +91,10 @@ public final class ModelFactory {
     }
 
     private boolean allIsInterface(Constructor<?> constructors) {
-        return ArraysKt.all(constructors.getParameterTypes(), Class::isInterface);
+        return ArrayUtil.all(constructors.getParameterTypes(), Class::isInterface);
     }
 
-    private <M extends IModel> Class<M> findModelClass(@NotNull Class<?> clazz) {
+    private <M> Class<M> findModelClass(@NotNull Class<?> clazz) {
         Class<?> superClass = clazz.getSuperclass();
         if (superClass == AbstractViewModel.class || superClass == com.numeon.brick.AbstractViewModel.class) {
             Type genericSuperclass = clazz.getGenericSuperclass();
@@ -107,7 +106,7 @@ public final class ModelFactory {
         throw new RuntimeException(clazz + "没有继承自AbstractViewModel！");
     }
 
-    private <M extends IModel> Class<M> findModelClass(Type abstractViewModelType) {
+    private <M> Class<M> findModelClass(Type abstractViewModelType) {
         ParameterizedType parameterizedType = (ParameterizedType) abstractViewModelType;
         Type secondActualType = parameterizedType.getActualTypeArguments()[1];
         return (Class<M>) secondActualType;
