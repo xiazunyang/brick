@@ -1,5 +1,7 @@
 package com.numeon.brick;
 
+import com.numeon.brick.coroutine.AbstractViewModel;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -9,50 +11,52 @@ import java.lang.reflect.Type;
 
 import kotlin.collections.ArraysKt;
 
+@SuppressWarnings("unchecked")
 public final class ModelFactory {
 
     private final Object instance;
     private final Method createMethod;
 
-    private static ModelFactory factory;
+    private static ModelFactory factory = new ModelFactory(null, null);
 
     private ModelFactory(Object instance, Method createMethod) {
         this.createMethod = createMethod;
         this.instance = instance;
     }
 
-    public synchronized static void install(Object instance) {
-        if (factory != null) {
-            throw new IllegalStateException("已初始化！请勿重复操作！");
-        }
+    public synchronized static void install(@NotNull Object instance) {
         try {
             Class<?> clazz = instance.getClass();
             Method createMethod = clazz.getMethod("create", Class.class);
             Class<?> returnType = createMethod.getReturnType();
-            if (returnType != Object.class) {
-                throw new IllegalStateException();
-            }
+            if (returnType != Object.class) throw new RuntimeException();
             factory = new ModelFactory(instance, createMethod);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            throw new IllegalStateException("instance中没有合法的create方法！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(instance + "中没有适用的create方法！");
         }
+    }
+
+    private boolean isInitialized() {
+        return createMethod != null && instance != null;
     }
 
     @NotNull
     private <T> T create(Class<T> clazz) {
         //尝试通过反射来创建Retrofit Api
-        if (createMethod != null && instance != null) {
+        if (isInitialized()) {
             try {
+                Object instance = createMethod.invoke(this.instance, clazz);
+                if (instance == null) throw new NullPointerException();
                 //noinspection unchecked
-                return (T) createMethod.invoke(instance, clazz);
-            } catch (Throwable e) {
+                return (T) instance;
+            } catch (Exception e) {
                 e.printStackTrace();
-                throw new IllegalStateException("创建Retrofit Api失败了！api class=" + clazz);
+                throw new RuntimeException("创建Retrofit Api失败了！api class=" + clazz);
             }
         }
         //如果都没有创建成功，则说明未初始化
-        throw new IllegalStateException("ModelFactory没有初始化！请调用install方法进行初始化！");
+        throw new RuntimeException("ModelFactory没有初始化！请调用install方法进行初始化！");
     }
 
     /**
@@ -62,12 +66,12 @@ public final class ModelFactory {
      * @return Model层实例。
      */
     @NotNull
-    static synchronized <M extends IModel, VM extends AbstractViewModel> M create(VM viewModel) {
+    public static synchronized <M extends IModel, VM extends IPresenter> M create(VM viewModel) {
         return factory.createModel(viewModel.getClass());
     }
 
     @NotNull
-    private <M extends IModel, VM extends AbstractViewModel> M createModel(Class<VM> viewModelClazz) {
+    private <M extends IModel, VM extends IPresenter> M createModel(Class<VM> viewModelClazz) {
         try {
             //从ViewModel的实现类的Class中获取Model的Class
             Class<M> modelClazz = findModelClass(viewModelClazz);
@@ -77,9 +81,9 @@ public final class ModelFactory {
             Object[] instances = generateApiInstance(constructor);
             //创建并返回Model对象
             return constructor.newInstance(instances);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalStateException("创建Retrofit Api时发生了错误！");
+            throw new RuntimeException("创建Retrofit Api时发生了错误！");
         }
     }
 
@@ -94,8 +98,16 @@ public final class ModelFactory {
     }
 
     private <M extends IModel> Constructor<M> findConstructor(Class<M> clazz) {
-        //noinspection unchecked
-        return (Constructor<M>) ArraysKt.first(clazz.getConstructors(), this::allIsInterface);
+        Constructor<?>[] constructors = clazz.getConstructors();
+        if (isInitialized()) {
+            return (Constructor<M>) ArraysKt.first(constructors, this::allIsInterface);
+        } else {
+            return (Constructor<M>) ArraysKt.first(constructors, this::isEmptyArguments);
+        }
+    }
+
+    private boolean isEmptyArguments(Constructor<?> constructor) {
+        return constructor.getParameterTypes().length == 0;
     }
 
     private boolean allIsInterface(Constructor<?> constructors) {
@@ -106,18 +118,17 @@ public final class ModelFactory {
         Class<?> superClass = clazz.getSuperclass();
         if (superClass == AbstractViewModel.class) {
             Type genericSuperclass = clazz.getGenericSuperclass();
-            return fetchModelClass(genericSuperclass);
+            return findModelClass(genericSuperclass);
         }
         if (superClass != null) {
             return findModelClass(superClass);
         }
-        throw new IllegalStateException(clazz + "没有继承自AbstractViewModel！");
+        throw new RuntimeException(clazz + "没有继承自AbstractViewModel！");
     }
 
-    private <M> Class<M> fetchModelClass(Type abstractViewModelType) {
+    private <M extends IModel> Class<M> findModelClass(Type abstractViewModelType) {
         ParameterizedType parameterizedType = (ParameterizedType) abstractViewModelType;
         Type secondActualType = parameterizedType.getActualTypeArguments()[1];
-        //noinspection unchecked
         return (Class<M>) secondActualType;
     }
 

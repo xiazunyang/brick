@@ -1,6 +1,7 @@
 package com.numeron.wan.contract
 
 import com.numeon.brick.*
+import com.numeon.brick.coroutine.AbstractViewModel
 import com.numeron.wan.entity.Article
 import com.numeron.wan.entity.JsonResult
 import com.numeron.wan.entity.Paged

@@ -10,4 +10,6 @@ public interface IPresenter<V extends IView, M extends IModel> {
     @NotNull
     M getModel();
 
+    void onCreated(V view);
+
 }
