@@ -97,7 +97,7 @@ public final class ModelFactory {
 
     private <M extends IModel> Class<M> findModelClass(@NotNull Class<?> clazz) {
         Class<?> superClass = clazz.getSuperclass();
-        if (superClass == AbstractViewModel.class) {
+        if (superClass == AbstractViewModel.class || superClass == com.numeon.brick.AbstractViewModel.class) {
             Type genericSuperclass = clazz.getGenericSuperclass();
             return findModelClass(genericSuperclass);
         }
