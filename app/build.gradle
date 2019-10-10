@@ -53,7 +53,7 @@ dependencies {
 
     implementation project(":rx")
     implementation project(":http")
-    implementation project(":frame")
+//    implementation project(":frame")
     implementation project(":brick")
     implementation project(":result")
     implementation project(":adapter")

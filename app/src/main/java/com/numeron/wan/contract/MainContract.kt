@@ -1,16 +1,20 @@
 package com.numeron.wan.contract
 
 import androidx.lifecycle.MutableLiveData
-import com.numeron.frame.base.IModel
-import com.numeron.frame.mvvm.AbstractViewModel
-import com.numeron.frame.mvvm.IView
+import com.numeon.brick.IModel
+import com.numeon.brick.IView
+import com.numeon.brick.coroutine.AbstractViewModel
+import com.numeon.brick.createViewModel
 import com.numeron.wan.entity.JsonResult
 import com.numeron.wan.entity.WeChatAuthor
 import kotlinx.coroutines.launch
 import retrofit2.http.GET
 
 
-interface MainView : IView<MainViewModel> {
+interface MainView : IView {
+
+    val mainViewModel: MainViewModel
+        get() = createViewModel()
 
     fun onLoadWeChatAuthorsFailure(throwable: Throwable)
 

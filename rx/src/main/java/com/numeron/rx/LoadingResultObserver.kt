@@ -4,12 +4,12 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.numeron.frame.base.IView
+import com.numeon.brick.IView
 import io.reactivex.disposables.Disposable
 
 
 open class LoadingResultObserver<T>(
-        view: IView, private val loadingMessage: String? = null, callback: (Result<T>) -> Unit
+        view: IView, private val loadingMessage: String = "正在加载", callback: (Result<T>) -> Unit
 ) : ResultObserver<T>(view, callback) {
 
     protected val view: IView

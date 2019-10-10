@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractViewModel<V extends IView, M extends IModel> extends ViewModel implements IPresenter<V, M> {
+public abstract class AbstractViewModel<V extends IView, M extends IModel> extends ViewModel implements IViewModel<V, M> {
 
     private V view;
     private M model;
@@ -22,12 +22,12 @@ public abstract class AbstractViewModel<V extends IView, M extends IModel> exten
     }
 
     @Override
-    final public void onCreated(V view) {
+    public void onCreated(@NotNull V view, Object iRetrofit) {
         if (this.view == null) {
             this.view = view;
         }
         if (this.model == null) {
-            this.model = ModelFactory.create(this);
+            this.model = ModelFactory.create(this, iRetrofit);
         }
     }
 

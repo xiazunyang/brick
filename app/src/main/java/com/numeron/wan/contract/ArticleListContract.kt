@@ -2,14 +2,16 @@ package com.numeron.wan.contract
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.*
-import com.numeron.frame.base.IModel
-import com.numeron.frame.mvvm.AbstractViewModel
-import com.numeron.frame.mvvm.IView
+import com.numeon.brick.AbstractViewModel
+import com.numeon.brick.IModel
+import com.numeon.brick.IView
+import com.numeon.brick.createViewModel
 import com.numeron.rx.LoadingResultObserver
 import com.numeron.rx.ResultObserver
 import com.numeron.wan.entity.Article
 import com.numeron.wan.entity.JsonResult
 import com.numeron.wan.entity.Paged
+import com.numeron.wan.util.Http
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.http.GET
@@ -18,7 +20,10 @@ import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 
-interface ArticleListView : IView<ArticleListViewModel> {
+interface ArticleListView : IView {
+
+    val articleListViewModel: ArticleListViewModel
+        get() = createViewModel(Http)
 
     val authorId: Int
     fun onArticleListLoadError(throwable: Throwable)

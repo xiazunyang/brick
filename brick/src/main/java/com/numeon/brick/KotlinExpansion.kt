@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 
 
-val IView.viewModelProvider
+private val IView.viewModelProvider
     get() = when (this) {
         is FragmentActivity -> ViewModelProviders.of(this)
         is Fragment -> ViewModelProviders.of(this)
@@ -16,13 +16,14 @@ val IView.viewModelProvider
     }
 
 
-fun <VM, V : IView> V.createViewModel(clazz: Class<VM>): VM where VM : IPresenter<V, *>, VM : ViewModel {
+@JvmOverloads
+fun <VM, V : IView> V.createViewModel(clazz: Class<VM>, iRetrofit: Any? = null): VM where VM : IViewModel<V, *>, VM : ViewModel {
     val viewModel = viewModelProvider.get(clazz)
-    viewModel.onCreated(this)
+    viewModel.onCreated(this, iRetrofit)
     return viewModel
 }
 
 
-inline fun <reified VM, V : IView> V.createViewModel(): VM where VM : IPresenter<V, *>, VM : ViewModel {
-    return createViewModel(VM::class.java)
+inline fun <reified VM, V : IView> V.createViewModel(iRetrofit: Any? = null): VM where VM : IViewModel<V, *>, VM : ViewModel {
+    return createViewModel(VM::class.java, iRetrofit)
 }

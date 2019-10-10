@@ -8,9 +8,8 @@ import com.numeron.adapter.DataBindingViewHolder
 import com.numeron.adapter.SpaceItemDecoration
 import com.numeron.result.startActivity
 import com.numeron.wan.R
-import com.numeron.wan.abs.AbsMvvmActivity
+import com.numeron.wan.abs.AbstractMVVMActivity
 import com.numeron.wan.contract.MainView
-import com.numeron.wan.contract.MainViewModel
 import com.numeron.wan.databinding.ActivityMainBinding
 import com.numeron.wan.databinding.RecyclerItemWeChatAuthorListBinding
 import com.numeron.wan.entity.WeChatAuthor
@@ -20,7 +19,7 @@ import com.numeron.wan.util.PositiveButton
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AbsMvvmActivity<MainViewModel>(), MainView {
+class MainActivity : AbstractMVVMActivity(), MainView {
 
     private val listeners = Listeners()
 
@@ -29,30 +28,30 @@ class MainActivity : AbsMvvmActivity<MainViewModel>(), MainView {
         //使用DataBinding
         val mainBinding = DataBindingUtil
                 .setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        mainBinding.viewModel = viewModel
+        mainBinding.viewModel = mainViewModel
         //设置一每个Item之间的间距
         val space = (resources.displayMetrics.density * 4).toInt()
         recyclerView.addItemDecoration(SpaceItemDecoration(space))
 
         //当LiveData中的数据生发变化时，重新绑定recyclerView的adapter
-        viewModel.weChatAuthorLiveData.observe(this, Observer {
+        mainViewModel.weChatAuthorLiveData.observe(this, Observer {
             recyclerView.adapter = Adapter(it)
         })
         //获取数据
-        viewModel.getWeChatCreator()
+        mainViewModel.getWeChatCreator()
     }
 
     override fun hideLoading() {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun showLoading(message: String?, title: String, isCancelable: Boolean) {
+    override fun showLoading(message: String, isCancelable: Boolean) {
         swipeRefreshLayout.isRefreshing = true
     }
 
     override fun onLoadWeChatAuthorsFailure(throwable: Throwable) {
         showDialog("获取数据时发生了错误，请稍候重试。", "提示",
-                PositiveButton("重试", viewModel::getWeChatCreator),
+                PositiveButton("重试", mainViewModel::getWeChatCreator),
                 NegativeButton("退出", ::finish)
         )
     }

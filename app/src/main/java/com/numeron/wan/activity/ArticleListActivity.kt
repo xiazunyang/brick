@@ -7,9 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.numeron.adapter.*
 import com.numeron.wan.R
-import com.numeron.wan.abs.AbsMvvmActivity
+import com.numeron.wan.abs.AbstractMVVMActivity
 import com.numeron.wan.contract.ArticleListView
-import com.numeron.wan.contract.ArticleListViewModel
 import com.numeron.wan.databinding.ActivityArticleListBinding
 import com.numeron.wan.databinding.RecyclerItemArticleListBinding
 import com.numeron.wan.entity.Article
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_article_list.*
  * 此界面展示了Paging的基本使用方法，并对RxJava的基本使用方法进行了演示。
  */
 
-class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleListView {
+class ArticleListActivity : AbstractMVVMActivity(), ArticleListView {
 
     override val authorId: Int
         get() = intent.getIntExtra(EXTRA_AUTHOR_ID, 0)
@@ -33,7 +32,7 @@ class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleList
         val articleListBinding = DataBindingUtil
                 .setContentView<ActivityArticleListBinding>(this, R.layout.activity_article_list)
         //绑定viewModel
-        articleListBinding.viewModel = viewModel
+        articleListBinding.viewModel = articleListViewModel
 
         //为articleListRecyclerView设置每个Item之间间隔4dp的ItemDecoration
         val dip = (resources.displayMetrics.density * 4).toInt()
@@ -42,23 +41,23 @@ class ArticleListActivity : AbsMvvmActivity<ArticleListViewModel>(), ArticleList
         val adapter = Adapter()
         articleListRecyclerView.adapter = adapter
         //adapter绑定LiveData
-        viewModel.articleListLiveData.observe(this, Observer(adapter::submitList))
+        articleListViewModel.articleListLiveData.observe(this, Observer(adapter::submitList))
         //获取数据
-        viewModel.refreshList()
+        articleListViewModel.refreshList()
     }
 
     override fun hideLoading() {
         articleSwipeRefreshLayout.isRefreshing = false
     }
 
-    override fun showLoading(message: String?, title: String, isCancelable: Boolean) {
+    override fun showLoading(message: String, isCancelable: Boolean) {
         articleSwipeRefreshLayout.isRefreshing = true
     }
 
     override fun onArticleListLoadError(throwable: Throwable) {
         showDialog(
                 "获取文章列表时发生了错误", "提示",
-                PositiveButton("重试", viewModel::refreshList),
+                PositiveButton("重试", articleListViewModel::refreshList),
                 NegativeButton("退出", ::finish)
         )
     }

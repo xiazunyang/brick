@@ -2,7 +2,7 @@ package com.numeon.brick;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface IPresenter<V extends IView, M extends IModel> {
+public interface IViewModel<V extends IView, M extends IModel> {
 
     @NotNull
     V getView();
@@ -10,6 +10,6 @@ public interface IPresenter<V extends IView, M extends IModel> {
     @NotNull
     M getModel();
 
-    void onCreated(V view);
+    void onCreated(@NotNull V view, Object iRetrofit);
 
 }
