@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractViewModel<V extends IView, M extends IModel> extends ViewModel implements IViewModel<V, M> {
+public abstract class AbstractViewModel<V extends IView, M> extends ViewModel implements IViewModel<V, M> {
 
     private V view;
     private M model;

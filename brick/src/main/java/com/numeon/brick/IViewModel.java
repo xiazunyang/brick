@@ -2,7 +2,7 @@ package com.numeon.brick;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface IViewModel<V extends IView, M extends IModel> {
+public interface IViewModel<V extends IView, M> {
 
     @NotNull
     V getView();

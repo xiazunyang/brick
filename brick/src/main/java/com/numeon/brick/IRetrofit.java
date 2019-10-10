@@ -8,6 +8,7 @@ package com.numeon.brick;
  *
  * @see retrofit2.Retrofit#create(Class)
  */
+@SuppressWarnings("JavadocReference")
 public interface IRetrofit {
 
     <T> T create(Class<T> clazz);

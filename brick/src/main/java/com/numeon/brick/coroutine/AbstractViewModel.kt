@@ -6,7 +6,7 @@ import com.numeon.brick.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 
-abstract class AbstractViewModel<V : IView, M : IModel> : ViewModel(), IViewModel<V, M>, CoroutineScope by MainScope() {
+abstract class AbstractViewModel<V : IView, M : Any> : ViewModel(), IViewModel<V, M>, CoroutineScope by MainScope() {
 
     private lateinit var view: V
     private lateinit var model: M

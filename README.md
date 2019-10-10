@@ -7,7 +7,7 @@
 * adapter
     * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/activity/MainActivity.kt#L62))。
     * 另外提供列表差异对比并自动处理动画的工具([查看实现](https://github.com/xiazunyang/numeron/blob/master/adapter/src/main/java/com/numeron/adapter/ItemDiffCallback.kt))。
-* frame
+* brick
     * MVP或MVVM架构，对外提供IView接口方便其它项目实现自己的抽象View层。
     * 当M层需要访问网络时，可以自动注入Retrofit Api，通过kotlin关键字by，M层可以省略若干行重复代码。
     * 完整示例：[抽象V层](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/abs/AbsMvvmActivity.kt#L21)、[V层](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/activity/MainActivity.kt#L20)、[VM层](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/contract/MainContract.kt#L19)、[M层](https://github.com/xiazunyang/numeron/blob/master/app/src/main/java/com/numeron/wan/contract/MainContract.kt#L46)  
@@ -36,8 +36,8 @@
 
 模块 | 依赖
 ---|---
-adapter | implementation 'com.github.xiazunyang.numeron:rx:1.0.1'
-frame | implementation 'com.github.xiazunyang.numeron:frame:1.0.1'
-http | implementation 'com.github.xiazunyang.numeron:http:1.0.1'
-result | implementation 'com.github.xiazunyang.numeron:result:1.0.1'
-rx | implementation 'com.github.xiazunyang.numeron:rx:1.0.1'
+adapter | implementation 'com.github.xiazunyang.numeron:rx:1.1.3'
+brick | implementation 'com.github.xiazunyang.numeron:brick:1.1.3'
+http | implementation 'com.github.xiazunyang.numeron:http:1.1.3'
+result | implementation 'com.github.xiazunyang.numeron:result:1.1.3'
+rx | implementation 'com.github.xiazunyang.numeron:rx:1.1.3'
