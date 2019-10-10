@@ -67,9 +67,9 @@ abstract class AbstractHttpUtil {
     protected open val certificates: Array<InputStream>
         get() = emptyArray()
 
-    public val retrofit by lazy(::createRetrofit)
+    val retrofit by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createRetrofit)
 
-    public val okHttpClient by lazy(::createOkHttpClient)
+    val okHttpClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createOkHttpClient)
 
     /**
      * 默认的构建Retrofit的方法，若无法满足需求，请重写此方法
