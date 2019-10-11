@@ -1,13 +1,13 @@
 package com.numeron.wan.util
 
 import android.app.Application
-import com.numeron.brick.ModelFactory
+import com.numeron.brick.installRetrofit
 
 class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        ModelFactory.install(Http)
+        installRetrofit(Http)
     }
 
 }

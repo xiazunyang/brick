@@ -1,10 +1,8 @@
 package com.numeron.brick;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public final class ModelFactory {
@@ -13,8 +11,8 @@ public final class ModelFactory {
 
     private static ModelFactory modelFactory = new ModelFactory(null);
 
-    private ModelFactory(ApiFactory apiFactory) {
-        this.apiFactory = apiFactory;
+    private ModelFactory(Object iRetrofit) {
+        this.apiFactory = ApiFactory.create(iRetrofit);
     }
 
     /**
@@ -26,7 +24,7 @@ public final class ModelFactory {
      * @see retrofit2.Retrofit#create(Class)
      */
     @SuppressWarnings("JavadocReference")
-    public synchronized static void install(@NotNull Object instance) {
+    synchronized static void install(Object instance) {
         ApiFactory apiFactory = ApiFactory.create(instance);
         modelFactory = new ModelFactory(apiFactory);
     }
@@ -38,26 +36,27 @@ public final class ModelFactory {
      * @param iRetrofit 用来创建Retrofit Api的一次性工具类。
      * @return Model层实例。
      */
-    @NotNull
-    public static synchronized <M, VM extends IViewModel> M create(@NotNull VM viewModel, Object iRetrofit) {
+    static synchronized <M> M create(Class<M> clazz, Object iRetrofit) {
         ApiFactory tempApiFactory = ApiFactory.create(iRetrofit);
-        return modelFactory.createModel(viewModel.getClass(), tempApiFactory);
+        return modelFactory.createModel(clazz, tempApiFactory);
     }
 
-    @NotNull
-    private <M, VM extends IViewModel> M createModel(Class<VM> viewModelClazz, IRetrofit apiFactory) {
+    private <M> M createModel(Class<M> modelClazz, IRetrofit apiFactory) {
         try {
-            //从ViewModel的实现类的Class中获取Model的Class
-            Class<M> modelClazz = findModelClass(viewModelClazz);
             //获取可用的构造器
-            Constructor<M> constructor = findConstructor(modelClazz);
-            //创建构造器需要的实例
-            Object[] instances = generateApiInstance(constructor, apiFactory);
-            //创建并返回Model对象
-            return constructor.newInstance(instances);
+            Constructor<M> constructor = findConstructor(modelClazz, apiFactory != null);
+            if (isEmptyArguments(constructor)) {
+                //如果是无参的构造器，则直接创建对象
+                return constructor.newInstance();
+            } else {
+                //创建构造器需要的实例
+                Object[] instances = generateApiInstance(constructor, apiFactory);
+                //创建并返回Model对象
+                return constructor.newInstance(instances);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("创建Retrofit Api时发生了错误！");
+            throw new RuntimeException("创建Retrofit Api时发生了错误！", e);
         }
     }
 
@@ -69,18 +68,40 @@ public final class ModelFactory {
      */
     private <M> Object[] generateApiInstance(Constructor<M> constructor, IRetrofit iRetrofit) {
         if (iRetrofit != null) {
-            return ArrayUtil.map(constructor.getParameterTypes(), iRetrofit::create);
+            return Util.map(constructor.getParameterTypes(), iRetrofit::create);
+        } else if (apiFactory != null) {
+            return Util.map(constructor.getParameterTypes(), apiFactory::create);
         } else {
-            return ArrayUtil.map(constructor.getParameterTypes(), apiFactory::create);
+            throw new RuntimeException(constructor.getDeclaringClass() + "无法实例化！");
         }
     }
 
-    private <M> Constructor<M> findConstructor(Class<M> clazz) {
-        Constructor<?>[] constructors = clazz.getConstructors();
-        if (apiFactory.isInitialized()) {
-            return (Constructor<M>) ArrayUtil.find(constructors, this::allIsInterface);
+    private <M> Constructor<M> findConstructor(Class<M> clazz, boolean hasRetrofit) {
+        //找出可用的构造方法，其中包含无参的构造方法
+        List<Constructor<?>> validConstructors = Util.filter(clazz.getConstructors(), this::allIsInterface);
+        if (validConstructors.isEmpty()) throw new RuntimeException(clazz + "中没有定义满足条件的构造方法！");
+        Collections.sort(validConstructors, (c1, c2) -> c1.getParameterTypes().length - c2.getParameterTypes().length);
+        //取出无参的构造方法，当ApiFactory不可用时，或没有可注入的构造方法时，使用此构造方法
+        final Constructor<?> emptyArgConstructor = Util.find(validConstructors, this::isEmptyArguments);
+        //取出参数最多、可以注入的构造方法，可能为null
+        final Constructor<?> apiArgConstructor = findArgumentLongestConstructor(validConstructors, emptyArgConstructor);
+        if (apiArgConstructor != null && (hasRetrofit || apiFactory != null && apiFactory.isInitialized())) {
+            //如果拥有需要注入的构造方法，并且ApiFactory已初始化，则使用有参的构造方法
+            return (Constructor<M>) apiArgConstructor;
+        } else if (emptyArgConstructor != null) {
+            //否则使用无参的构造方法
+            return (Constructor<M>) emptyArgConstructor;
         } else {
-            return (Constructor<M>) ArrayUtil.find(constructors, this::isEmptyArguments);
+            throw new RuntimeException(clazz + "中没有无参的构造方法！");
+        }
+    }
+
+    private Constructor<?> findArgumentLongestConstructor(List<Constructor<?>> validConstructors, Constructor<?> emptyArgConstructor) {
+        Constructor<?> constructor = validConstructors.get(validConstructors.size() - 1);
+        if (constructor != emptyArgConstructor) {
+            return constructor;
+        } else {
+            return null;
         }
     }
 
@@ -89,32 +110,7 @@ public final class ModelFactory {
     }
 
     private boolean allIsInterface(Constructor<?> constructors) {
-        return ArrayUtil.all(constructors.getParameterTypes(), Class::isInterface);
-    }
-
-    private <M> Class<M> findModelClass(@NotNull Class<?> clazz) {
-        Class<?> superClass = clazz.getSuperclass();
-        if (superClass == AbstractViewModel.class) {
-            Type genericSuperclass = clazz.getGenericSuperclass();
-            return findModelClass(genericSuperclass);
-        }
-        try {
-            if (superClass == com.numeron.brick.coroutine.AbstractViewModel.class) {
-                Type genericSuperclass = clazz.getGenericSuperclass();
-                return findModelClass(genericSuperclass);
-            }
-        } catch (Throwable ignored) {
-        }
-        if (superClass != null) {
-            return findModelClass(superClass);
-        }
-        throw new RuntimeException(clazz + "没有继承自AbstractViewModel！");
-    }
-
-    private <M> Class<M> findModelClass(Type abstractViewModelType) {
-        ParameterizedType parameterizedType = (ParameterizedType) abstractViewModelType;
-        Type secondActualType = parameterizedType.getActualTypeArguments()[1];
-        return (Class<M>) secondActualType;
+        return Util.all(constructors.getParameterTypes(), Class::isInterface);
     }
 
 }

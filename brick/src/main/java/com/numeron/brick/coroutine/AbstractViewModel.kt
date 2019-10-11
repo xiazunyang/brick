@@ -24,7 +24,7 @@ abstract class AbstractViewModel<V : IView, M : Any> : ViewModel(), IViewModel<V
             this.view = view
         }
         if (!this::model.isInitialized) {
-            this.model = ModelFactory.create(this, iRetrofit)
+            this.model = createModel(fetchModelClass(), iRetrofit)
         }
     }
 

@@ -1,7 +1,5 @@
 package com.numeron.brick;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Method;
 
 class ApiFactory implements IRetrofit {
@@ -33,7 +31,6 @@ class ApiFactory implements IRetrofit {
         }
     }
 
-    @NotNull
     @Override
     public <T> T create(Class<T> clazz) {
         //尝试通过反射来创建Retrofit Api
