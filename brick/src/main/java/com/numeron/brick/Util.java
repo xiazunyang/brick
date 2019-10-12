@@ -51,12 +51,12 @@ class Util {
     }
 
     static <T, R> R[] map(T[] array, Transform<T, R> transform) {
-        Object[] objects = new Object[array.length];
-        for (int i = 0; i < array.length; i++) {
-            R mapResult = transform.transform(array[i]);
-            objects[i] = mapResult;
+        ArrayList<R> list = new ArrayList<>(array.length);
+        for (T element : array) {
+            R mapResult = transform.transform(element);
+            list.add(mapResult);
         }
-        return (R[]) objects;
+        return (R[]) list.toArray();
     }
 
     static <T> boolean all(T[] array, Predicate<T> predicate) {

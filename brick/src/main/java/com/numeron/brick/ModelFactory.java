@@ -24,7 +24,7 @@ public final class ModelFactory {
      * @see retrofit2.Retrofit#create(Class)
      */
     @SuppressWarnings("JavadocReference")
-    synchronized static void install(Object instance) {
+    static void install(Object instance) {
         ApiFactory apiFactory = ApiFactory.create(instance);
         modelFactory = new ModelFactory(apiFactory);
     }
@@ -66,7 +66,7 @@ public final class ModelFactory {
      * @param constructor Model层的构造器
      * @return Retrofit Api的实例数组
      */
-    private <M> Object[] generateApiInstance(Constructor<M> constructor, IRetrofit iRetrofit) {
+    private Object[] generateApiInstance(Constructor<?> constructor, IRetrofit iRetrofit) {
         if (iRetrofit != null) {
             return Util.map(constructor.getParameterTypes(), iRetrofit::create);
         } else if (apiFactory != null) {
