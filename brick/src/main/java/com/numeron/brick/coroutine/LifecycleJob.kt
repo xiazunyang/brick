@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Job
 
 internal class LifecycleJob(
-        private val job: Job,
+        job: Job,
         lifecycleOwner: LifecycleOwner,
         private val until: Lifecycle.Event = Lifecycle.Event.ON_DESTROY) : Job by job, LifecycleEventObserver {
 
@@ -24,8 +24,8 @@ internal class LifecycleJob(
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        if (event >= until && job.isActive) {
-            job.cancel()
+        if (event >= until && isActive) {
+            cancel()
             source.lifecycle.removeObserver(this)
         }
     }

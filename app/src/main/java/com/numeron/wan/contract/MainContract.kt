@@ -27,7 +27,7 @@ class MainViewModel : AbstractViewModel<MainView, MainModel>() {
     fun getWeChatCreator() {
         loading {
             try {
-                weChatAuthorLiveData.postValue(model.getWeChatAuthor().result)
+                weChatAuthorLiveData.value = model.getWeChatAuthor().result
             } catch (throwable: Throwable) {
                 throwable.printStackTrace()
                 view.onLoadWeChatAuthorsFailure(throwable)

@@ -17,7 +17,7 @@ abstract class AbstractViewModel<V : IView, M : Any> : ViewModel(), IViewModel<V
     private lateinit var model: M
 
     /**
-     * 所有在这个类中启动的协程，会在这个生命周期的事件发生时终止运行
+     * 所有在这个类中启动的非顶层协程，会在这个生命周期的事件发生时终止运行
      * 你可以在子类中覆写此方法来重新指定一个触发停止协程运行的生命周期事件
      * 或者设置为null来禁用此功能。
      */

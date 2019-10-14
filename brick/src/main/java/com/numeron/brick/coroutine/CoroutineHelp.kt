@@ -30,14 +30,9 @@ fun <VM : AbstractViewModel<V, *>, V : IView> VM.loading(
         message: String = "正在加载",
         isCancelable: Boolean = false,
         task: suspend CoroutineScope.() -> Unit): Job {
-    view.showLoading(message, isCancelable)
-    return launch(Dispatchers.IO) {
-        try {
-            task()
-        } finally {
-            withContext(Dispatchers.Main) {
-                view.hideLoading()
-            }
-        }
+    return launch {
+        view.showLoading(message, isCancelable)
+        task()
+        view.hideLoading()
     }
 }
