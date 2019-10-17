@@ -12,6 +12,7 @@ open class ViewAttachStateDispose(private val view: View) : Consumer<Disposable>
             override fun onViewDetachedFromWindow(v: View) {
                 if (!disposable.isDisposed) {
                     disposable.dispose()
+                    view.removeOnAttachStateChangeListener(this)
                 }
             }
         })

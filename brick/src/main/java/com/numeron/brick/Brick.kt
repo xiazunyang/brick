@@ -2,6 +2,7 @@
 
 package com.numeron.brick
 
+import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -33,7 +34,7 @@ fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
  * @param iRetrofit Any? 创建Model的实例时，用于创建Retrofit Api实例的Retrofit或其它工具类
  * @return M Model的实例
  */
-inline fun <reified M> createModel(iRetrofit: Any?) = createModel(M::class.java, iRetrofit)
+inline fun <reified M> createModel(iRetrofit: Any? = null) = createModel(M::class.java, iRetrofit)
 
 
 /**
@@ -41,6 +42,7 @@ inline fun <reified M> createModel(iRetrofit: Any?) = createModel(M::class.java,
  * @receiver VM ViewModel实例
  * @return Class<M> 与ViewModel关联的Model的Class
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 internal fun <VM : IViewModel<*, M>, M> VM.fetchModelClass(): Class<M> {
     return Util.fetchModelClass(javaClass)
 }
