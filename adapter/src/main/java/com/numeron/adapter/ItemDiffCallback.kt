@@ -2,11 +2,12 @@ package com.numeron.adapter
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
+import com.numeron.common.Identifiable
 
-class ItemDiffCallback<T> : DiffUtil.ItemCallback<T>() {
+class ItemDiffCallback<T : Identifiable<*>> : DiffUtil.ItemCallback<T>() {
 
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
-        return oldItem === newItem
+        return oldItem.id == newItem.id
     }
 
     @SuppressLint("DiffUtilEquals")

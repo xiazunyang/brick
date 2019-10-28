@@ -3,7 +3,6 @@ package com.numeron.wan.contract
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.*
 import com.numeron.brick.AbstractViewModel
-import com.numeron.brick.IView
 import com.numeron.brick.createViewModel
 import com.numeron.rx.LoadingResultObserver
 import com.numeron.rx.ResultObserver

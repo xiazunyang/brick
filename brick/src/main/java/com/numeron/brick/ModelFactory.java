@@ -1,5 +1,7 @@
 package com.numeron.brick;
 
+import androidx.room.RoomDatabase;
+
 import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
@@ -8,11 +10,13 @@ import java.util.List;
 public final class ModelFactory {
 
     private final ApiFactory apiFactory;
+    private final DaoFactory daoFactory;
 
-    private static ModelFactory modelFactory = new ModelFactory(null);
+    private static ModelFactory modelFactory = new ModelFactory(null, null);
 
-    private ModelFactory(Object iRetrofit) {
-        this.apiFactory = ApiFactory.create(iRetrofit);
+    private ModelFactory(ApiFactory apiFactory, DaoFactory daoFactory) {
+        this.apiFactory = apiFactory;
+        this.daoFactory = daoFactory;
     }
 
     /**
@@ -24,15 +28,16 @@ public final class ModelFactory {
      * @see retrofit2.Retrofit#create(Class)
      */
     @SuppressWarnings("JavadocReference")
-    static void install(Object instance) {
+    static void install(Object instance, RoomDatabase room) {
         ApiFactory apiFactory = ApiFactory.create(instance);
-        modelFactory = new ModelFactory(apiFactory);
+        DaoFactory daoFactory = DaoFactory.create(room);
+        modelFactory = new ModelFactory(apiFactory, daoFactory);
     }
 
     /**
      * 通过ViewModel的实例，来创建它泛型参数中指定的Model对象。
      *
-     * @param viewModel 继承自AbstractViewModel的实例。
+     * @param clazz     Model的Class对象
      * @param iRetrofit 用来创建Retrofit Api的一次性工具类。
      * @return Model层实例。
      */
@@ -50,7 +55,7 @@ public final class ModelFactory {
                 return constructor.newInstance();
             } else {
                 //创建构造器需要的实例
-                Object[] instances = generateApiInstance(constructor, apiFactory);
+                Object[] instances = createConstructorParameterInstance(constructor, apiFactory);
                 //创建并返回Model对象
                 return constructor.newInstance(instances);
             }
@@ -66,13 +71,26 @@ public final class ModelFactory {
      * @param constructor Model层的构造器
      * @return Retrofit Api的实例数组
      */
-    private Object[] generateApiInstance(Constructor<?> constructor, IRetrofit iRetrofit) {
-        if (iRetrofit != null) {
-            return Util.map(constructor.getParameterTypes(), iRetrofit::create);
-        } else if (apiFactory != null) {
-            return Util.map(constructor.getParameterTypes(), apiFactory::create);
+    private Object[] createConstructorParameterInstance(Constructor<?> constructor, IRetrofit iRetrofit) {
+        return Util.map(constructor.getParameterTypes(), clazz -> createInstance(clazz, iRetrofit));
+    }
+
+    private Object createInstance(Class<?> clazz, IRetrofit iRetrofit) {
+        //如果接口的方法上有运行时注解，则说明是Retrofit Api接口
+        boolean hasAnnotation = Util.contains(clazz.getMethods(), (method) -> method.getAnnotations().length > 0);
+        //如果接口继承了某一个接口，则说明是RoomDao接口
+        boolean hasParentInterface = clazz.getInterfaces().length > 0;
+        if (!hasAnnotation || hasParentInterface) {
+            if (daoFactory == null) throw new RuntimeException("Brick初始化时没有传入Room实例！");
+            return daoFactory.getDao(clazz);
         } else {
-            throw new RuntimeException(constructor.getDeclaringClass() + "无法实例化！");
+            if (iRetrofit != null) {
+                return iRetrofit.create(clazz);
+            } else if (apiFactory != null) {
+                return apiFactory.create(clazz);
+            } else {
+                throw new RuntimeException("Brick还没有初始化！");
+            }
         }
     }
 

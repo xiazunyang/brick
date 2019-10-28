@@ -32,13 +32,13 @@ class ApiFactory implements IRetrofit {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T create(Class<T> clazz) {
         //尝试通过反射来创建Retrofit Api
         if (isInitialized()) {
             try {
                 Object instance = createMethod.invoke(this.instance, clazz);
                 if (instance == null) throw new NullPointerException();
-                //noinspection unchecked
                 return (T) instance;
             } catch (Exception e) {
                 e.printStackTrace();

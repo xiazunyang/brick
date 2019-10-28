@@ -2,12 +2,13 @@ package com.numeron.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.numeron.common.Identifiable
 
 
 /**
  * 当RecyclerView的列表发生变化时，使用此工具来对比差异，并且处理动画
  */
-open class DiffUtil<T>(
+open class DiffUtil<T: Identifiable<*>>(
         protected val oldList: List<T>,
         protected val newList: List<T>) : DiffUtil.Callback() {
 
@@ -16,7 +17,7 @@ open class DiffUtil<T>(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] === newList[newItemPosition]
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -3,7 +3,6 @@ package com.numeron.rx
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
-import com.numeron.brick.IView
 import io.reactivex.disposables.Disposable
 
 

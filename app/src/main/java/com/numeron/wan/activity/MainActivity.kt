@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.numeron.adapter.BindingAdapter
-import com.numeron.adapter.DataBindingViewHolder
+import com.numeron.adapter.BindingViewHolder
 import com.numeron.adapter.SpaceItemDecoration
 import com.numeron.result.startActivity
 import com.numeron.wan.R
@@ -60,7 +60,7 @@ class MainActivity : AbstractMVVMActivity(), MainView {
             private val list: List<WeChatAuthor>
     ) : BindingAdapter<RecyclerItemWeChatAuthorListBinding>(list.size, R.layout.recycler_item_we_chat_author_list) {
 
-        override fun onBindViewHolder(holder: DataBindingViewHolder<RecyclerItemWeChatAuthorListBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BindingViewHolder<RecyclerItemWeChatAuthorListBinding>, position: Int) {
             val weChatAuthor = list[position]
             holder.binding.weChatAuthor = weChatAuthor
             holder.binding.listeners = listeners

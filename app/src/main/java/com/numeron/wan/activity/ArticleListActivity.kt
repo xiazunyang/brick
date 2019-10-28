@@ -64,7 +64,7 @@ class ArticleListActivity : AbstractMVVMActivity(), ArticleListView {
 
     private inner class Adapter : PagedBindingAdapter<Article, RecyclerItemArticleListBinding>(R.layout.recycler_item_article_list) {
 
-        override fun onBindViewHolder(holder: DataBindingViewHolder<RecyclerItemArticleListBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BindingViewHolder<RecyclerItemArticleListBinding>, position: Int) {
             val article = getItem(position) ?: return
             holder.binding.article = article
             holder.binding.executePendingBindings()

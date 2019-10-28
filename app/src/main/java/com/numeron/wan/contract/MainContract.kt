@@ -1,12 +1,13 @@
 package com.numeron.wan.contract
 
 import androidx.lifecycle.MutableLiveData
-import com.numeron.brick.IView
 import com.numeron.brick.coroutine.AbstractViewModel
 import com.numeron.brick.coroutine.loading
 import com.numeron.brick.createViewModel
 import com.numeron.wan.entity.JsonResult
 import com.numeron.wan.entity.WeChatAuthor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.http.GET
 
 
@@ -30,7 +31,9 @@ class MainViewModel : AbstractViewModel<MainView, MainModel>() {
                 weChatAuthorLiveData.value = model.getWeChatAuthor().result
             } catch (throwable: Throwable) {
                 throwable.printStackTrace()
-                view.onLoadWeChatAuthorsFailure(throwable)
+                withContext(Dispatchers.Main) {
+                    view.onLoadWeChatAuthorsFailure(throwable)
+                }
             }
         }
     }
@@ -43,7 +46,7 @@ class MainModel(mainApi: MainApi) : MainApi by mainApi
 
 interface MainApi {
 
-    @GET("wxarticle/chapters/json")
+    @GET("wxarticle/chapters/jsond")
     suspend fun getWeChatAuthor(): JsonResult<List<WeChatAuthor>>
 
 }

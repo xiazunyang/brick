@@ -11,27 +11,33 @@ class Util {
     private Util() {
     }
 
-    static <M> Class<M> fetchModelClass(Class<?> clazz) {
+    /*static <M> Class<M> fetchModelClass(Class<?> clazz) {
         Class<?> superClass = clazz.getSuperclass();
+        if (superClass == null) throw new NullPointerException("难道你传入了一个Object对象？");
         Class<?>[] interfaces = superClass.getInterfaces();
         if (contains(interfaces, element -> element == IViewModel.class)) {
             Type genericSuperclass = clazz.getGenericSuperclass();
             return getModelClass(genericSuperclass);
         }
-        if (superClass != null) {
-            return fetchModelClass(superClass);
-        }
-        throw new RuntimeException();
+        return fetchModelClass(superClass);
     }
 
     private static <M> Class<M> getModelClass(Type abstractViewModelType) {
         ParameterizedType parameterizedType = (ParameterizedType) abstractViewModelType;
         Type secondActualType = parameterizedType.getActualTypeArguments()[1];
         return (Class<M>) secondActualType;
-    }
-
+    }*/
 
     static <T> T find(Iterable<T> array, Predicate<T> predicate) {
+        for (T element : array) {
+            if (predicate.test(element)) {
+                return element;
+            }
+        }
+        return null;
+    }
+
+    static <T> T find(T[] array, Predicate<T> predicate) {
         for (T element : array) {
             if (predicate.test(element)) {
                 return element;
@@ -68,7 +74,7 @@ class Util {
         return true;
     }
 
-    private static <T> boolean contains(T[] array, Predicate<T> predicate) {
+    static <T> boolean contains(T[] array, Predicate<T> predicate) {
         for (T element : array) {
             if (predicate.test(element)) {
                 return true;

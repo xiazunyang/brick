@@ -11,7 +11,7 @@ class LifecycleConsumer(
         lifecycle: Lifecycle,
         until: Lifecycle.Event = Lifecycle.Event.ON_DESTROY) : Consumer<Disposable> {
 
-    private val disposableConsumerObserver = DisposableConsumerObserver(until)
+    private val disposableConsumerObserver = DisposableConsumeObserver(until)
 
     init {
         val currentState = lifecycle.currentState
@@ -24,7 +24,7 @@ class LifecycleConsumer(
         disposableConsumerObserver.disposable = disposable
     }
 
-    private class DisposableConsumerObserver(private val until: Lifecycle.Event) : LifecycleEventObserver {
+    private class DisposableConsumeObserver(private val until: Lifecycle.Event) : LifecycleEventObserver {
 
         lateinit var disposable: Disposable
 

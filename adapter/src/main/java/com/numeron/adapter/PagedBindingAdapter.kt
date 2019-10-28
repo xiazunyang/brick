@@ -6,17 +6,18 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
+import com.numeron.common.Identifiable
 
-abstract class PagedBindingAdapter<T, B : ViewDataBinding>(
+abstract class PagedBindingAdapter<T : Identifiable<*>, B : ViewDataBinding>(
         @LayoutRes private val layoutId: Int
-) : PagedListAdapter<T, DataBindingViewHolder<B>>(ItemDiffCallback()) {
+) : PagedListAdapter<T, BindingViewHolder<B>>(ItemDiffCallback()) {
 
     override fun getItemViewType(position: Int) = layoutId
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder<B> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<B> {
         val itemViewDataBinding = DataBindingUtil.inflate<B>(LayoutInflater
                 .from(parent.context), viewType, parent, false)
-        return DataBindingViewHolder(itemViewDataBinding)
+        return BindingViewHolder(itemViewDataBinding)
     }
 
 }
