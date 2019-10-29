@@ -30,7 +30,11 @@ fun install(retrofit: Any, room: RoomDatabase? = null) {
  * @return Model    实例
  */
 fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
-    return ModelFactory.create(clazz, iRetrofit)
+    if (iRetrofit == null || iRetrofit is Retrofit || iRetrofit is IRetrofit) {
+        return ModelFactory.create(clazz, iRetrofit)
+    } else {
+        throw IllegalArgumentException("必需使用Retrofit或者IRetrofit的实例才能创建${clazz}的对象！")
+    }
 }
 
 
