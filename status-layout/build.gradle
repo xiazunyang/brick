@@ -6,7 +6,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.xiazunyang'
 version = '0.1.0'
 
-
 android {
     compileSdkVersion 29
 
@@ -31,9 +30,5 @@ android {
 
 dependencies {
     compileOnly 'androidx.lifecycle:lifecycle-livedata:2.1.0'
-    compileOnly project(':common')
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api project(':common')
 }

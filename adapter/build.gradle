@@ -31,7 +31,8 @@ dependencies {
     compileOnly 'androidx.recyclerview:recyclerview:1.0.0'
     compileOnly 'androidx.paging:paging-runtime-ktx:2.1.0'
     compileOnly 'androidx.databinding:databinding-runtime:3.5.1'
-    compileOnly project(':common')
+
+    api project(':common')
 
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
