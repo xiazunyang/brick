@@ -6,6 +6,8 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
 
+import retrofit2.Retrofit;
+
 @SuppressWarnings("unchecked")
 public final class ModelFactory {
 
@@ -22,14 +24,19 @@ public final class ModelFactory {
     /**
      * 调用此方法来初始化，需要传入Retrofit对象，或者是有与create方法同名、同签名的方法的其它对象。
      *
-     * @param instance 建议是Retrofit
+     * @param retrofit 建议是Retrofit
      *                 如果对Retrofit进行了二次封装，建议实现 {@link IRetrofit}接口后传入此方法
      * @see IRetrofit
      * @see retrofit2.Retrofit#create(Class)
      */
-    @SuppressWarnings("JavadocReference")
-    static void install(Object instance, RoomDatabase room) {
-        ApiFactory apiFactory = ApiFactory.create(instance);
+    static void install(Retrofit retrofit, RoomDatabase room) {
+        ApiFactory apiFactory = ApiFactory.create(retrofit);
+        DaoFactory daoFactory = DaoFactory.create(room);
+        modelFactory = new ModelFactory(apiFactory, daoFactory);
+    }
+
+    static void install(IRetrofit iRetrofit, RoomDatabase room) {
+        ApiFactory apiFactory = ApiFactory.create(iRetrofit);
         DaoFactory daoFactory = DaoFactory.create(room);
         modelFactory = new ModelFactory(apiFactory, daoFactory);
     }

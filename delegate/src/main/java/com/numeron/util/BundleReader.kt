@@ -8,7 +8,7 @@ import android.os.Parcelable
 import java.io.Serializable
 
 
-fun <T> Bundle.read(key: String, defaultValue: T): T {
+internal fun <T> Bundle.read(key: String, defaultValue: T): T {
     return when (defaultValue) {
         //基本类型
         is Int -> getInt(key, defaultValue) as T

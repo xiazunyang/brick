@@ -2,13 +2,13 @@ package com.numeron.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.numeron.common.Status
 
 class StatusLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null, i: Int = 0) :
         FrameLayout(c, a, i) {

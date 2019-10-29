@@ -1,0 +1,6 @@
+### 提供创建ViewModel的工厂方法，是对ViewModelProvider的简易封装，通过Kotlin的特性可以使用极少的代码即可创建ViewModel实例。
+### 提供创建数据层的工厂方法，主要思路是让数据层实现Retrofit Api接口和Room Dao接口，然后通过Kotlin的by关键字将实现过程交给构造器中的接口，工厂方法将在创建数据层对象的时候，为构造器中的参数自动创建实例并注入。最终实现精简数据层代码主要目的。
+
+* 通过install方法进行初始化，参数需要Retrofit对象和RoomDatabase对象。
+* 通过createViewModel方法来创建ViewModel实例，当ViewModel的构造方法中有参数时，请在此方法中传入。
+* 通过createModel方法来创建数据层的实例，当数据层的构造方法中有Retrofit Api接口及Room Dao接口时，可以自动通过初始化的参数创建它们的实例。

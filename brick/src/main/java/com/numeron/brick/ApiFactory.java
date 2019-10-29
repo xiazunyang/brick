@@ -16,18 +16,18 @@ class ApiFactory implements IRetrofit {
         return createMethod != null && instance != null;
     }
 
-    static ApiFactory create(Object instance) {
-        if (instance == null) return null;
+    static ApiFactory create(Object retrofit) {
+        if (retrofit == null) return null;
         try {
-            Class<?> clazz = instance.getClass();
+            Class<?> clazz = retrofit.getClass();
             Method createMethod = clazz.getMethod("create", Class.class);
             Class<?> returnType = createMethod.getReturnType();
             createMethod.setAccessible(true);
             if (returnType != Object.class) throw new RuntimeException();
-            return new ApiFactory(instance, createMethod);
+            return new ApiFactory(retrofit, createMethod);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(instance + "中没有适用的create方法！");
+            throw new RuntimeException(retrofit + "中没有适用的create方法！");
         }
     }
 

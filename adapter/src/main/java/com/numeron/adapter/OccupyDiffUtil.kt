@@ -1,9 +1,11 @@
 package com.numeron.adapter
 
+import com.numeron.common.Identifiable
+
 /**
  * 当RecyclerView中有占位的ItemView时，使用此工具来比较列表差异、处理动画
  */
-class OccupyDiffUtil<T>(oldList: List<T>, newList: List<T>, private val occupy: Int) : DiffUtil<T>(oldList, newList) {
+class OccupyDiffUtil<T : Identifiable<*>>(oldList: List<T>, newList: List<T>, private val occupy: Int) : DiffUtil<T>(oldList, newList) {
 
     override fun getOldListSize() = oldList.size + occupy
 

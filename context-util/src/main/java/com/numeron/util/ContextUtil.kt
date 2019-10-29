@@ -37,43 +37,39 @@ val application: Application
 private val density by lazy {
     context.resources.displayMetrics.density
 }
+/* from dp to px */
+val Int.dp: Int
+    get() = (density * this + 0.5f).toInt()
 
-fun dp(value: Int): Int {
-    return (density * value + 0.5f).toInt()
-}
+val Float.dp: Float
+    get() = density * this + 0.5f
 
-fun dp(value: Float): Float {
-    return density * value + 0.5f
-}
+/* from px to dp */
+val Int.toDp: Int
+    get() = (this / density + 0.5f).toInt()
 
-fun px2dp(value: Int): Int {
-    return (value / density + 0.5f).toInt()
-}
+val Float.toDp: Float
+    get() = this / density + 0.5f
 
-fun px2dp(value: Float): Float {
-    return value / density + 0.5f
-}
 
 /* sp/px 相关工具 */
 private val scaledDensity by lazy {
     context.resources.displayMetrics.scaledDensity
 }
 
-fun sp(value: Int): Int {
-    return (scaledDensity * value + 0.5f).toInt()
-}
+/* from sp to px */
+val Int.sp: Int
+    get() = (scaledDensity * this + 0.5f).toInt()
 
-fun sp(value: Float): Float {
-    return scaledDensity * value + 0.5f
-}
+val Float.sp: Float
+    get() = scaledDensity * this + 0.5f
 
-fun px2sp(value: Int): Int {
-    return (value / scaledDensity + 0.5f).toInt()
-}
+/* from px to sp */
+val Int.toSp: Int
+    get() = (this / scaledDensity + 0.5f).toInt()
 
-fun px2sp(value: Float): Float {
-    return value / scaledDensity + 0.5f
-}
+val Float.toSp: Float
+    get() = this / scaledDensity + 0.5f
 
 /* Toast 相关 */
 

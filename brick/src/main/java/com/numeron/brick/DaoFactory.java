@@ -20,11 +20,8 @@ class DaoFactory {
         if (room == null) return null;
         //获取所有公开的的方法
         Method[] methods = room.getClass().getMethods();
-        List<Method> methodList = Util.filter(methods, element -> {
-                    Class<?> returnType = element.getReturnType();
-                    return returnType.isInterface() || Modifier.isAbstract(returnType.getModifiers());
-                }
-        );
+        List<Method> methodList = Util.filter(methods,
+                element -> Modifier.isAbstract(element.getReturnType().getModifiers()));
         return new DaoFactory(room, methodList);
     }
 

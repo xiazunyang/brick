@@ -2,7 +2,11 @@
 
 package com.numeron.brick
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.room.RoomDatabase
+import retrofit2.Retrofit
 
 
 /**
@@ -10,7 +14,11 @@ import androidx.room.RoomDatabase
  */
 @JvmOverloads
 fun install(retrofit: Any, room: RoomDatabase? = null) {
-    ModelFactory.install(retrofit, room)
+    when (retrofit) {
+        is Retrofit -> ModelFactory.install(retrofit, room)
+        is IRetrofit -> ModelFactory.install(retrofit, room)
+        else -> throw IllegalArgumentException("必需使用Retrofit或者IRetrofit的实例才能初始化！")
+    }
 }
 
 
@@ -32,3 +40,30 @@ fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
  * @return M Model的实例
  */
 inline fun <reified M> createModel(iRetrofit: Any? = null) = createModel(M::class.java, iRetrofit)
+
+/**
+ * 创建ViewModel的工厂方法
+ * @receiver ViewModelStoreOwner 的扩展方法
+ * @param clazz Class<VM>  要创建的ViewModel的Class对象
+ * @param factory Factory   用于创建ViewModel对象的工厂
+ * @return VM 创建后的实例
+ */
+fun <VM : ViewModel> ViewModelStoreOwner.createViewModel(clazz: Class<VM>, factory: ViewModelProvider.Factory): VM {
+    return ViewModelProvider(this, factory).get(clazz)
+}
+
+/**
+ * [createViewModel] 的inline方法
+ */
+inline fun <reified VM : ViewModel> ViewModelStoreOwner.createViewModel(factory: ViewModelProvider.Factory): VM {
+    return createViewModel(VM::class.java, factory)
+}
+
+/**
+ * 如果ViewModel需要接收参数，建议使用此方法创建ViewModel实例
+ * @param arguments Array<out Any> ViewModel的参数
+ * @return VM 创建后的实例
+ */
+inline fun <reified VM : ViewModel> ViewModelStoreOwner.createViewModel(vararg arguments: Any): VM {
+    return createViewModel(ViewModelFactory(*arguments))
+}

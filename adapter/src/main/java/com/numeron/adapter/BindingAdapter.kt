@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BindingAdapter<B : ViewDataBinding>(
         private val size: Int = 0,
         @LayoutRes private val layoutId: Int = 0
-) : RecyclerView.Adapter<BindingViewHolder<B>>() {
+) : RecyclerView.Adapter<BindingHolder<B>>() {
 
     override fun getItemCount() = size
 
@@ -21,13 +21,13 @@ abstract class BindingAdapter<B : ViewDataBinding>(
      */
     override fun getItemViewType(position: Int) = layoutId
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<B> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder<B> {
         val itemViewDataBinding = DataBindingUtil.inflate<B>(
                 LayoutInflater.from(
                         parent.context
                 ), viewType, parent, false
         )
-        return BindingViewHolder(itemViewDataBinding)
+        return BindingHolder(itemViewDataBinding)
     }
 
 }

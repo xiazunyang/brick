@@ -1,6 +1,7 @@
 package com.numeron.view
 
 import androidx.lifecycle.Observer
+import com.numeron.common.Status
 
 class StatusObserver(private val statusLayout: StatusLayout) : Observer<Status> {
 

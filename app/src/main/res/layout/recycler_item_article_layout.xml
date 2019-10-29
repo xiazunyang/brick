@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.numeron.wandroid.activity.ArticleListActivity">
+
+    <data>
+
+        <variable
+            name="article"
+            type="com.numeron.wandroid.entity.db.Article" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/articleTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{article.title}"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="论JetPack的野心" />
+
+        <TextView
+            android:id="@+id/articleDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bindDate="@{article.publishTime}"
+            app:formatPattern="@{`yyyy年MM月dd日`}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/articleTitleTextView"
+            tools:text="2019年10月25日" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

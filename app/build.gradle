@@ -5,59 +5,91 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
+
     defaultConfig {
-        applicationId "com.numeron.wan"
+        applicationId "com.numeron.wandroid"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
     dataBinding {
-        enabled = true
+        enabled true
     }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Kotlin & Coroutine
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.1'
+    //Android
+    api 'androidx.core:core-ktx:1.1.0'
+    api 'androidx.room:room-ktx:2.2.1'
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'androidx.paging:paging-runtime-ktx:2.1.0'
+    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    //Http
+    api 'com.squareup.retrofit2:retrofit:2.6.1'
+    api 'com.squareup.retrofit2:converter-gson:2.6.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.1.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    kapt 'androidx.room:room-compiler:2.2.1'
 
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.paging:paging-runtime-ktx:2.1.0'
-    implementation 'androidx.paging:paging-rxjava2-ktx:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.0'
-
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
-
-    implementation project(":rx")
-    implementation project(":http")
-    implementation project(":brick")
-    implementation project(":result")
-    implementation project(":adapter")
+    api project(':http')
+    api project(':brick')
+    api project(':common')
+    api project(':adapter')
+    api project(':starter')
+    api project(':delegate')
+    api project(':context-util')
+    api project(':status-layout')
+    api project(':status-livedata')
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+
+//下面的jarPackage和afterEvaluate负责让这个aar再生成一个输出jar包的任务
+def jarPackage(buildType) {
+    return tasks.create("jar${buildType.capitalize()}Package", Copy) {
+        def aarFile = file(project.buildDir.path + "/outputs/aar/${project.name}-${buildType}.aar")
+        def outputDir = file("../plugins/wandroid-lib/libs")
+        from zipTree(aarFile)
+        into outputDir
+        include 'classes.jar'
+        rename 'classes.jar', "${project.name}-${buildType}.jar"
+        group = 'build'
+        description = '生成jar包'
+    }.dependsOn(project.getTasksByName("assemble${buildType.capitalize()}", false).first())
+}
+
+afterEvaluate {
+    android {
+        buildTypes.findAll().each { buildType ->
+            def buildTypeName = buildType.getName()
+            jarPackage(buildTypeName)
+        }
+    }
 }

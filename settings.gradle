@@ -1,2 +1,2 @@
-include ':app', ':http', ':adapter', ':result', ':rx', ':brick', ':status-layout', ':status-livedata', ':delegate', ':context-util'
-rootProject.name='Numeron'
+include ':app', ':http', ':adapter', ':result', ':rx', ':brick', ':status-layout', ':status-livedata', ':delegate', ':context-util', ':common', ':starter'
+rootProject.name='Birck'

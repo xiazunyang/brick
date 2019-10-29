@@ -10,14 +10,14 @@ import com.numeron.common.Identifiable
 
 abstract class PagedBindingAdapter<T : Identifiable<*>, B : ViewDataBinding>(
         @LayoutRes private val layoutId: Int
-) : PagedListAdapter<T, BindingViewHolder<B>>(ItemDiffCallback()) {
+) : PagedListAdapter<T, BindingHolder<B>>(ItemDiffCallback()) {
 
     override fun getItemViewType(position: Int) = layoutId
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<B> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder<B> {
         val itemViewDataBinding = DataBindingUtil.inflate<B>(LayoutInflater
                 .from(parent.context), viewType, parent, false)
-        return BindingViewHolder(itemViewDataBinding)
+        return BindingHolder(itemViewDataBinding)
     }
 
 }
