@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.xiazunyang'
-version = '1.0'
+version = '0.1.0'
 
 android {
     compileSdkVersion 29

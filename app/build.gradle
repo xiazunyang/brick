@@ -57,7 +57,6 @@ dependencies {
 
     api project(':http')
     api project(':brick')
-    api project(':common')
     api project(':adapter')
     api project(':starter')
     api project(':delegate')
@@ -70,28 +69,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-}
-
-
-//下面的jarPackage和afterEvaluate负责让这个aar再生成一个输出jar包的任务
-def jarPackage(buildType) {
-    return tasks.create("jar${buildType.capitalize()}Package", Copy) {
-        def aarFile = file(project.buildDir.path + "/outputs/aar/${project.name}-${buildType}.aar")
-        def outputDir = file("../plugins/wandroid-lib/libs")
-        from zipTree(aarFile)
-        into outputDir
-        include 'classes.jar'
-        rename 'classes.jar', "${project.name}-${buildType}.jar"
-        group = 'build'
-        description = '生成jar包'
-    }.dependsOn(project.getTasksByName("assemble${buildType.capitalize()}", false).first())
-}
-
-afterEvaluate {
-    android {
-        buildTypes.findAll().each { buildType ->
-            def buildTypeName = buildType.getName()
-            jarPackage(buildTypeName)
-        }
-    }
 }
