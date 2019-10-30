@@ -5,20 +5,14 @@ package com.numeron.brick
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.room.RoomDatabase
-import retrofit2.Retrofit
 
 
 /**
  * 调用此方法进行初始化，需要传入Retrofit或其它包装了create方法的对象作为参数，用于创建Api实例
  */
 @JvmOverloads
-fun install(retrofit: Any, room: RoomDatabase? = null) {
-    when (retrofit) {
-        is Retrofit -> ModelFactory.install(retrofit, room)
-        is IRetrofit -> ModelFactory.install(retrofit, room)
-        else -> throw IllegalArgumentException("必需使用Retrofit或者IRetrofit的实例才能初始化！")
-    }
+fun install(retrofit: Any, room: Any? = null) {
+    ModelFactory.install(retrofit, room)
 }
 
 
@@ -29,12 +23,9 @@ fun install(retrofit: Any, room: RoomDatabase? = null) {
  * @param iRetrofit 注入Retrofit Api时要使用的Retrofit，不传时，使用初始化时的全局Retrofit
  * @return Model    实例
  */
+@JvmOverloads
 fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
-    if (iRetrofit == null || iRetrofit is Retrofit || iRetrofit is IRetrofit) {
-        return ModelFactory.create(clazz, iRetrofit)
-    } else {
-        throw IllegalArgumentException("必需使用Retrofit或者IRetrofit的实例才能创建${clazz}的对象！")
-    }
+    return ModelFactory.create(clazz, iRetrofit)
 }
 
 
@@ -52,7 +43,9 @@ inline fun <reified M> createModel(iRetrofit: Any? = null) = createModel(M::clas
  * @param factory Factory   用于创建ViewModel对象的工厂
  * @return VM 创建后的实例
  */
-fun <VM : ViewModel> ViewModelStoreOwner.createViewModel(clazz: Class<VM>, factory: ViewModelProvider.Factory): VM {
+@JvmOverloads
+fun <VM : ViewModel> ViewModelStoreOwner.createViewModel(
+        clazz: Class<VM>, factory: ViewModelProvider.Factory = ViewModelFactory()): VM {
     return ViewModelProvider(this, factory).get(clazz)
 }
 

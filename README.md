@@ -19,8 +19,8 @@
     * 另外提供列表差异对比并自动处理动画的工具。
 * result
     * 能够精简在申请权限时和Activity之间传递参数和回传参数的代码。
-* ~~rx~~
-    * ~~当使用RxJava时，配合frame中的MVP和MVVM框架，能够感知View层的生命周期，并及时作出处理，防止内存泄漏。~~
+* rx
+    * 当使用RxJava时，让数据流与ViewModel的生命周期绑定，数据流将在ViewModel被弃用时停止订阅。
 * context-util
     * 提供全局获取Context和Application的扩展方法、dp/sp计算的相关扩展方法以及Toast的相关扩展方法。需要通过initContext方法进行初始化。
 * delegate

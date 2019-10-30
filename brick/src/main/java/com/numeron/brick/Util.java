@@ -1,7 +1,5 @@
 package com.numeron.brick;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,23 +8,6 @@ class Util {
 
     private Util() {
     }
-
-    /*static <M> Class<M> fetchModelClass(Class<?> clazz) {
-        Class<?> superClass = clazz.getSuperclass();
-        if (superClass == null) throw new NullPointerException("难道你传入了一个Object对象？");
-        Class<?>[] interfaces = superClass.getInterfaces();
-        if (contains(interfaces, element -> element == IViewModel.class)) {
-            Type genericSuperclass = clazz.getGenericSuperclass();
-            return getModelClass(genericSuperclass);
-        }
-        return fetchModelClass(superClass);
-    }
-
-    private static <M> Class<M> getModelClass(Type abstractViewModelType) {
-        ParameterizedType parameterizedType = (ParameterizedType) abstractViewModelType;
-        Type secondActualType = parameterizedType.getActualTypeArguments()[1];
-        return (Class<M>) secondActualType;
-    }*/
 
     static <T> T find(Iterable<T> array, Predicate<T> predicate) {
         for (T element : array) {

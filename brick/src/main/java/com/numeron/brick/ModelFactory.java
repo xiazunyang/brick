@@ -1,12 +1,8 @@
 package com.numeron.brick;
 
-import androidx.room.RoomDatabase;
-
 import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
-
-import retrofit2.Retrofit;
 
 @SuppressWarnings("unchecked")
 public final class ModelFactory {
@@ -29,14 +25,9 @@ public final class ModelFactory {
      * @see IRetrofit
      * @see retrofit2.Retrofit#create(Class)
      */
-    static void install(Retrofit retrofit, RoomDatabase room) {
+    @SuppressWarnings("JavadocReference")
+    static void install(Object retrofit, Object room) {
         ApiFactory apiFactory = ApiFactory.create(retrofit);
-        DaoFactory daoFactory = DaoFactory.create(room);
-        modelFactory = new ModelFactory(apiFactory, daoFactory);
-    }
-
-    static void install(IRetrofit iRetrofit, RoomDatabase room) {
-        ApiFactory apiFactory = ApiFactory.create(iRetrofit);
         DaoFactory daoFactory = DaoFactory.create(room);
         modelFactory = new ModelFactory(apiFactory, daoFactory);
     }
