@@ -1,17 +1,17 @@
 <resources>
-    <declare-styleable name="StatusLayout">
-        <attr name="status" format="enum">
+    <declare-styleable name="StatefulLayout">
+        <attr name="state" format="enum">
             <enum name="empty" value="0" />
             <enum name="loading" value="1" />
-            <enum name="error" value="2" />
+            <enum name="failure" value="2" />
             <enum name="success" value="3" />
         </attr>
         <attr name="loadingTextView" format="reference" />
-        <attr name="errorTextView" format="reference" />
+        <attr name="failureTextView" format="reference" />
         <attr name="emptyTextView" format="reference" />
         <attr name="contentView" format="reference" />
         <attr name="loadingView" format="reference" />
-        <attr name="errorView" format="reference" />
+        <attr name="failureView" format="reference" />
         <attr name="emptyView" format="reference" />
         <attr name="animationEnabled" format="boolean" />
         <attr name="enterAnimation" format="reference" />

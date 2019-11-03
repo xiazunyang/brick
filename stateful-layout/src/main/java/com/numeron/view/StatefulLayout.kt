@@ -8,32 +8,32 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.numeron.common.Status
+import com.numeron.common.State
 
-class StatusLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null, i: Int = 0) :
+class StatefulLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null, i: Int = 0) :
         FrameLayout(c, a, i) {
 
-    private var previousStatus: Status? = null
+    private var previousState: State? = null
     private var hookLoading = false
 
     /**
      * 设置状态，设置空时，将恢复上一个状态
      */
-    var status: Status? = null
+    var state: State? = null
         //当设置状态时，将状态压入栈中
         set(value) {
-            if (value == null && previousStatus != null) {
-                field = previousStatus
-                previousStatus = null
+            if (value == null && previousState != null) {
+                field = previousState
+                previousState = null
                 changeView()
             } else if (value != field) {
-                previousStatus = field
+                previousState = field
                 field = value
                 changeView()
             }
         }
 
-    private val errorView
+    private val failureView
         get() = getChildAt(0)
 
     private val emptyView
@@ -61,52 +61,52 @@ class StatusLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null
     init {
         val inflater = LayoutInflater.from(c)
 
-        val tArray = c.obtainStyledAttributes(a, R.styleable.StatusLayout)
+        val tArray = c.obtainStyledAttributes(a, R.styleable.StatefulLayout)
 
-        contentViewId = tArray.getResourceId(R.styleable.StatusLayout_contentView, 0)
+        contentViewId = tArray.getResourceId(R.styleable.StatefulLayout_contentView, 0)
 
         val errorResId = tArray.getResourceId(
-                R.styleable.StatusLayout_errorView,
-                R.layout.status_error_layout
+                R.styleable.StatefulLayout_failureView,
+                R.layout.state_failure_layout
         )
         inflater.inflate(errorResId, this)
 
         val emptyResId = tArray.getResourceId(
-                R.styleable.StatusLayout_emptyView,
-                R.layout.status_empty_layout
+                R.styleable.StatefulLayout_emptyView,
+                R.layout.state_empty_layout
         )
         inflater.inflate(emptyResId, this)
 
         val loadingResId = tArray.getResourceId(
-                R.styleable.StatusLayout_loadingView,
-                R.layout.status_loading_layout
+                R.styleable.StatefulLayout_loadingView,
+                R.layout.state_loading_layout
         )
         inflater.inflate(loadingResId, this)
 
         loadingTextViewId = tArray.getResourceId(
-                R.styleable.StatusLayout_loadingTextView,
+                R.styleable.StatefulLayout_loadingTextView,
                 R.id.loadingStatusTextView
         )
         errorTextViewId = tArray.getResourceId(
-                R.styleable.StatusLayout_errorTextView,
+                R.styleable.StatefulLayout_failureTextView,
                 R.id.errorStatusTextView
         )
         emptyTextViewId = tArray.getResourceId(
-                R.styleable.StatusLayout_emptyTextView,
+                R.styleable.StatefulLayout_emptyTextView,
                 R.id.emptyStatusTextView
         )
 
         //分配默认状态
-        defaultStatus = tArray.getInt(R.styleable.StatusLayout_status, 0)
+        defaultStatus = tArray.getInt(R.styleable.StatefulLayout_state, 0)
 
-        animationEnabled = tArray.getBoolean(R.styleable.StatusLayout_animationEnabled, true)
+        animationEnabled = tArray.getBoolean(R.styleable.StatefulLayout_animationEnabled, true)
         exitAnimationId = tArray.getResourceId(
-                R.styleable.StatusLayout_exitAnimation,
-                R.anim.default_exit_status_layout
+                R.styleable.StatefulLayout_exitAnimation,
+                R.anim.default_exit_state_layout
         )
         enterAnimationId = tArray.getResourceId(
-                R.styleable.StatusLayout_enterAnimation,
-                R.anim.default_enter_status_layout
+                R.styleable.StatefulLayout_enterAnimation,
+                R.anim.default_enter_state_layout
         )
 
         tArray.recycle()
@@ -114,7 +114,7 @@ class StatusLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        status = Status.values().first {
+        state = State.values().first {
             it.ordinal == defaultStatus
         }
     }
@@ -150,18 +150,14 @@ class StatusLayout @JvmOverloads constructor(c: Context, a: AttributeSet? = null
         loadingOperation = operation
     }
 
-    fun recoveryStatus() {
-        status = previousStatus
-    }
-
     private fun changeView() {
         if (::loadingOperation.isInitialized) {
-            loadingOperation(status == Status.Loading)
+            loadingOperation(state == State.Loading)
         }
-        if (!hookLoading && status == Status.Loading) loadingView?.show() else loadingView?.hide()
-        if (status == Status.Success) contentView?.show() else contentView?.hide()
-        if (status == Status.Failure) errorView?.show() else errorView?.hide()
-        if (status == Status.Empty) emptyView?.show() else emptyView?.hide()
+        if (!hookLoading && state == State.Loading) loadingView?.show() else loadingView?.hide()
+        if (state == State.Success) contentView?.show() else contentView?.hide()
+        if (state == State.Failure) failureView?.show() else failureView?.hide()
+        if (state == State.Empty) emptyView?.show() else emptyView?.hide()
     }
 
     private fun View.show() {

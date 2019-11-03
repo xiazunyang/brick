@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.numeron.view.StatusLayout
+    <com.numeron.view.StatefulLayout
         android:id="@+id/articleListStatusLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:status="success">
+        app:state="success">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/articleListRecyclerView"
@@ -18,6 +18,6 @@
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    </com.numeron.view.StatusLayout>
+    </com.numeron.view.StatefulLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

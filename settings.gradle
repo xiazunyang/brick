@@ -1,2 +1,2 @@
-include ':app', ':http', ':adapter', ':result', ':rx', ':brick', ':status-layout', ':status-livedata', ':delegate', ':context-util', ':common', ':starter'
+include ':app', ':http', ':adapter', ':result', ':rx', ':brick', ':stateful-layout', ':stateful-livedata', ':delegate', ':context-util', ':common', ':starter'
 rootProject.name='Birck'

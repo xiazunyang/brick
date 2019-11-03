@@ -9,7 +9,7 @@ import com.numeron.wandroid.dao.ArticleDao
 import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.Paged
 import com.numeron.wandroid.entity.db.Article
-import com.numeron.common.Status
+import com.numeron.common.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
             .setInitialLoadSizeHint(20)
             .build()
 
-    val loadStateLiveData = MutableLiveData<Pair<Status, String>>()
+    val loadStateLiveData = MutableLiveData<Pair<State, String>>()
 
     val articleListLiveData =
             LivePagedListBuilder(articleRepository.sourceFactory(paramProvider.chapterId), pagedConfig)
@@ -55,20 +55,20 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
             launch(Dispatchers.IO) {
                 try {
                     //显示等待动画
-                    loadStateLiveData.postValue(Status.Loading to "正在加载文章列表，请稍候...")
+                    loadStateLiveData.postValue(State.Loading to "正在加载文章列表，请稍候...")
                     delay(3000)
                     val paged = articleRepository.getArticleList(paramProvider.chapterId, 1).data
                     currentPage = paged.curPage
                     val list = paged.list
                     articleRepository.insert(list)
                     if (list.isEmpty()) {
-                        loadStateLiveData.postValue(Status.Empty to "没有相关文章")
+                        loadStateLiveData.postValue(State.Empty to "没有相关文章")
                     } else {
-                        loadStateLiveData.postValue(Status.Success to "文章列表获取成功")
+                        loadStateLiveData.postValue(State.Success to "文章列表获取成功")
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    loadStateLiveData.postValue(Status.Failure to (e.message ?: "加载文章列表时发生了错误"))
+                    loadStateLiveData.postValue(State.Failure to (e.message ?: "加载文章列表时发生了错误"))
                 }
             }
         }

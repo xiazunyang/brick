@@ -61,8 +61,8 @@ dependencies {
     api project(':starter')
     api project(':delegate')
     api project(':context-util')
-    api project(':status-layout')
-    api project(':status-livedata')
+    api project(':stateful-layout')
+    api project(':stateful-livedata')
 
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 

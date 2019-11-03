@@ -1,6 +1,6 @@
 package com.numeron.common;
 
-public enum Status {
+public enum State {
 
     Empty, Loading, Failure, Success
 
