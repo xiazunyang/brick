@@ -10,7 +10,7 @@ import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.Paged
 import com.numeron.wandroid.entity.db.Article
 import com.numeron.common.State
-import kotlinx.coroutines.Dispatchers
+import com.numeron.wandroid.other.IgnoreExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.http.GET
@@ -41,7 +41,7 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
                     .build()
 
     fun refresh() {
-        launch(Dispatchers.IO) {
+        launch {
             articleRepository.deleteAll(paramProvider.chapterId)
         }
     }
@@ -52,7 +52,7 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
 
         //列表为空时，此方法会在主线程中被调用
         override fun onZeroItemsLoaded() {
-            launch(Dispatchers.IO) {
+            launch {
                 try {
                     //显示等待动画
                     loadStateLiveData.postValue(State.Loading to "正在加载文章列表，请稍候...")
@@ -84,15 +84,11 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
         }
 
         private fun loadAndSaveArticle(page: Int) {
-            launch(Dispatchers.IO) {
-                try {
-                    val paged = articleRepository.getArticleList(paramProvider.chapterId, page).data
-                    currentPage = paged.curPage
-                    val list = paged.list
-                    articleRepository.insert(list)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            launch(IgnoreExceptionHandler()) {
+                val paged = articleRepository.getArticleList(paramProvider.chapterId, page).data
+                currentPage = paged.curPage
+                val list = paged.list
+                articleRepository.insert(list)
             }
         }
 

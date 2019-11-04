@@ -1,10 +1,10 @@
 package com.numeron.wandroid.contract
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.numeron.brick.ViewModel
 import com.numeron.brick.createModel
 import com.numeron.wandroid.dao.WeChatAuthorDao
 import com.numeron.wandroid.entity.ApiResponse
@@ -27,14 +27,14 @@ class WeChatAuthorViewModel : ViewModel() {
                     .build()
 
     fun refresh() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             weChatAuthorRepository.deleteAll()
         }
     }
 
     private inner class BoundaryCallback : PagedList.BoundaryCallback<WeChatAuthor>() {
         override fun onZeroItemsLoaded() {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 loadStatusLiveData.postValue(State.Loading to "正在加载公众号列表")
                 delay(3000)
                 try {

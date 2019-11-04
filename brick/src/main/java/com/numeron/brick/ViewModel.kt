@@ -1,10 +1,11 @@
 package com.numeron.brick
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 
-abstract class ViewModel : androidx.lifecycle.ViewModel(), CoroutineScope by MainScope() {
+/**
+ * 拥有一个Dispatchers.IO的协程域
+ */
+abstract class ViewModel : androidx.lifecycle.ViewModel(), CoroutineScope by CoroutineScope(SupervisorJob() + Dispatchers.IO) {
 
     override fun onCleared() {
         cancel()

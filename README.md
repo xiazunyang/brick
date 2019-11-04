@@ -30,13 +30,13 @@
     * Fragment arguments bundle属性只读代理。
 * starter
     * start系列的扩展方法以及Intent相关的扩展方法[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L27)
-* status-layout
+* stateful-layout
     * 用于切换状态的布局，可以自定义各种状态下要显示的View，也可以自定义切换时的动画效果。
     * [查看xml布局示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/res/layout/activity_article_list_layout.xml#L8)
     * [查看更改状态示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L52)
-* status-livedata
+* stateful-livedata
     * 提供一个在多线程的环境中方便向UI线程发送数据状态的LiveData。[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/contract/ArticleListContract.kt#L58)
-    * 配合status-layout模块食用，风味更佳！[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L52)
+    * 配合stateful-layout模块食用，风味更佳！[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L52)
     
     
 <!--### 在自己的工程中使用

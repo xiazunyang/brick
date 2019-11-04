@@ -15,7 +15,7 @@ import com.numeron.util.ActivityExtraDelegate
 import com.numeron.util.dp
 import com.numeron.wandroid.entity.db.Article
 import com.numeron.wandroid.other.*
-import com.numeron.view.StatusMessageObserver
+import com.numeron.view.StatefulMessageObserver
 import com.numeron.wandroid.R
 import com.numeron.wandroid.contract.ArticleListParamProvider
 import com.numeron.wandroid.contract.ArticleListViewModel
@@ -49,7 +49,7 @@ class ArticleListActivity : AppCompatActivity(), ArticleListParamProvider {
         //替换默认的加载动画
         articleListStatusLayout.setLoadingOperation(articleListRefreshLayout::setRefreshing)
         articleListViewModel.articleListLiveData.observe(this, Observer(adapter::submitList))
-        articleListViewModel.loadStateLiveData.observe(this, StatusMessageObserver(articleListStatusLayout))
+        articleListViewModel.loadStateLiveData.observe(this, StatefulMessageObserver(articleListStatusLayout))
     }
 
     private inner class ArticleAdapter : PagedBindingAdapter<Article,
