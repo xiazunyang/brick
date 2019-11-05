@@ -1,7 +1,6 @@
 package com.numeron.wandroid.contract
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.numeron.brick.ViewModel
@@ -10,7 +9,6 @@ import com.numeron.wandroid.dao.WeChatAuthorDao
 import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.db.WeChatAuthor
 import com.numeron.common.State
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.http.GET
@@ -27,14 +25,14 @@ class WeChatAuthorViewModel : ViewModel() {
                     .build()
 
     fun refresh() {
-        viewModelScope.launch {
+        launch {
             weChatAuthorRepository.deleteAll()
         }
     }
 
     private inner class BoundaryCallback : PagedList.BoundaryCallback<WeChatAuthor>() {
         override fun onZeroItemsLoaded() {
-            viewModelScope.launch {
+            launch {
                 loadStatusLiveData.postValue(State.Loading to "正在加载公众号列表")
                 delay(3000)
                 try {
@@ -55,7 +53,7 @@ class WeChatAuthorViewModel : ViewModel() {
 
 }
 
-
+// 使用Brick创建此类的实例，可自动注入dao层与api层
 class WeChatAuthorRepository(dao: WeChatAuthorDao, api: WeChatAuthorsApi) : WeChatAuthorDao by dao, WeChatAuthorsApi by api
 
 

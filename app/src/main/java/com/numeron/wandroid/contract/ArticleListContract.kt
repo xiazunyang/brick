@@ -84,6 +84,7 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
         }
 
         private fun loadAndSaveArticle(page: Int) {
+            //此协程中使用ExceptionHandler来处理异常
             launch(IgnoreExceptionHandler()) {
                 val paged = articleRepository.getArticleList(paramProvider.chapterId, page).data
                 currentPage = paged.curPage

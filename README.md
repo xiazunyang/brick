@@ -13,7 +13,7 @@
 * http
     * 兼容纯Java项目。
     * HTTP网络工具，是对Retrofit2.6.1的再封装，请在自己的工程中实现AbstractHttpUtil抽象类([查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/other/Http.kt))。
-    * 提供常用的Date转换器和反序列化工具，重写
+    * 提供常用的Date转换器和反序列化工具
 * adapter
     * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/WeChatAuthorActivity.kt#L39))。
     * 另外提供列表差异对比并自动处理动画的工具。
@@ -37,27 +37,3 @@
 * stateful-livedata
     * 提供一个在多线程的环境中方便向UI线程发送数据状态的LiveData。[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/contract/ArticleListContract.kt#L58)
     * 配合stateful-layout模块食用，风味更佳！[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L52)
-    
-    
-<!--### 在自己的工程中使用
-
-1. 在工程根目录下的build.gradle文件中添加以下代码，如果已存在，则忽略此步。
-
-```
-    allprojects {
-        repositories {
-            ...
-            maven { url 'https://jitpack.io' }
-        }
-    }
-```
-
-2. 添加依赖：
-
-模块 | 依赖
----|---
-brick | implementation 'com.github.xiazunyang.numeron:brick:1.2.1'
-http | implementation 'com.github.xiazunyang.numeron:http:1.2.1'
-adapter | implementation 'com.github.xiazunyang.numeron:rx:1.2.1'
-result | implementation 'com.github.xiazunyang.numeron:result:1.2.1'
-rx | implementation 'com.github.xiazunyang.numeron:rx:1.2.1'-->
