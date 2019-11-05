@@ -1,12 +1,12 @@
 package com.numeron.status
 
-/* 表示数据的状态，[isSuccess]表示成功状态，[value]在成功时表示数据，其它表示*/
+/* 表示数据的状态，[value]在成功时有值*/
 sealed class State<T>(val value: T)
 
 /* 表示数据获取成功，用sealed修饰的目的是为了不让其它人使用这个类 */
 sealed class Success<T>(value: T) : State<T>(value)
 
-/* 表示数据为空 */
+/* 表示数据为空，Empty是Success的子类 */
 class Empty(val message: String) : Success<Nothing?>(null)
 
 /* 表示获取数据失败 */

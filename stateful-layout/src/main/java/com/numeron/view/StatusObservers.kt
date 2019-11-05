@@ -3,7 +3,7 @@ package com.numeron.view
 import androidx.lifecycle.Observer
 import com.numeron.common.State
 
-class StatefulObserver(private val statefulLayout: StatefulLayout) : Observer<State> {
+class StatefulLayoutObserver(private val statefulLayout: StatefulLayout) : Observer<State> {
 
     override fun onChanged(state: State) {
         statefulLayout.state = state
