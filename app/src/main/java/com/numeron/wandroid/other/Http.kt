@@ -10,12 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Http : AbstractHttpUtil() {
 
-    private val httpLoggingInterceptor = HttpLoggingInterceptor()
-
-    init {
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-    }
-
     override val baseUrl: String = "https://wanandroid.com/"
 
     override val header: Map<String, String>
@@ -24,10 +18,6 @@ object Http : AbstractHttpUtil() {
     override val convertersFactories: Iterable<Converter.Factory> = listOf(
             DateConverterFactory.create("yyyy-MM-dd'T'HH:mm:ss"),
             GsonConverterFactory.create(gson)
-    )
-
-    override val interceptors: Iterable<Interceptor> = listOf(
-            httpLoggingInterceptor
     )
 
 }

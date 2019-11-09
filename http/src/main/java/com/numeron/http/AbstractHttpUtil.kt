@@ -2,6 +2,7 @@ package com.numeron.http
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -34,42 +35,44 @@ abstract class AbstractHttpUtil {
     /**
      * OkHttp的拦截器
      */
-    protected open val interceptors: Iterable<Interceptor>
-        get() = emptyList()
+    protected open val interceptors: Iterable<Interceptor> = emptyList()
 
     /**
      * CallAdapter转换器
      */
-    protected open val callAdapterFactories: Iterable<CallAdapter.Factory>
-        get() = emptyList()
+    protected open val callAdapterFactories: Iterable<CallAdapter.Factory> = emptyList()
 
     /**
      * Converter转换器
      */
-    protected open val convertersFactories: Iterable<Converter.Factory>
-        get() = emptyList()
+    protected open val convertersFactories: Iterable<Converter.Factory> = emptyList()
 
     /**
      * Https密钥
      */
-    protected open val keyStore: InputStream?
-        get() = null
+    protected open val keyStore: InputStream? = null
 
     /**
      * Https密码
      */
-    protected open val keyStorePassword: String?
-        get() = null
+    protected open val keyStorePassword: String? = null
 
     /**
      * Https证书
      */
-    protected open val certificates: Array<InputStream>
-        get() = emptyArray()
+    protected open val certificates: Array<InputStream> = emptyArray()
+
+    protected val httpLoggingInterceptor = HttpLoggingInterceptor()
+
+    protected val loggingLevel = HttpLoggingInterceptor.Level.BODY
 
     val retrofit by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createRetrofit)
 
     val okHttpClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createOkHttpClient)
+
+    init {
+        httpLoggingInterceptor.level = loggingLevel
+    }
 
     /**
      * 默认的构建Retrofit的方法，若无法满足需求，请重写此方法
@@ -77,6 +80,7 @@ abstract class AbstractHttpUtil {
     protected open fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .addConverterFactory(FileConverterFactory())
                 .apply {
                     convertersFactories.map(::addConverterFactory)
                     callAdapterFactories.map(::addCallAdapterFactory)
@@ -102,6 +106,8 @@ abstract class AbstractHttpUtil {
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .connectTimeout(timeout, TimeUnit.SECONDS)
                 .addInterceptor(AddHeaderInterceptor(header))
+                .addInterceptor(FileDownloadInterceptor())
+                .addInterceptor(httpLoggingInterceptor)
                 .apply {
                     interceptors.map(::addInterceptor)
                 }
@@ -123,7 +129,7 @@ abstract class AbstractHttpUtil {
         val sslContext = SSLContext.getInstance("TLS")
         val trustManager = X509TrustManagerImpl(x509TrustManager)
         sslContext.init(keyManagers, arrayOf<TrustManager>(trustManager), null)
-        return sslSocketFactory(sslContext.socketFactory)
+        return sslSocketFactory(sslContext.socketFactory, x509TrustManager)
     }
 
     private fun prepareKeyManager(keyInput: InputStream?, password: String?): Array<KeyManager>? {
