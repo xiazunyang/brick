@@ -3,6 +3,7 @@
 package com.numeron.http
 
 import okhttp3.Headers
+import okhttp3.HttpUrl
 import okhttp3.Request
 import okhttp3.ResponseBody
 import retrofit2.create
@@ -13,13 +14,22 @@ import java.net.URLDecoder
 inline fun <reified T> AbstractHttpUtil.create() = retrofit.create<T>()
 
 
-internal fun getFileNameByUrl(url: String): String {
-    //如果Content-Disposition中无法解析出文件名，则取url中的最后一部分字符串作为文件名
-    return if (url.contains('\\')) {
-        url.substringAfterLast('\\')
-    } else {
-        url.substringAfterLast('/')
-    }.substringBefore('?')
+fun ResponseBody.toFile(): File {
+    return if (this is FileResponseBody) {
+        file
+    } else try {
+        val field = javaClass.getDeclaredField("delegate")
+        field.isAccessible = true
+        val delegate = field.get(this) as ResponseBody
+        delegate.toFile()
+    } catch (throwable: Throwable) {
+        throw RuntimeException("响应体中没有记录文件信息！或者没有使用Tag标记File类型的参数！", throwable)
+    }
+}
+
+
+fun getFileNameByUrl(url: HttpUrl): String {
+    return url.pathSegments.last()
 }
 
 
@@ -53,12 +63,12 @@ fun Headers.getFileName(): String? {
 }
 
 
-fun Headers.getFileSize(): Long {
+internal fun Headers.getFileSize(): Long {
     return get("Content-Length")?.toLongOrNull() ?: -1
 }
 
 
-fun Headers.getFileType(): String? {
+internal fun Headers.getFileType(): String? {
     return get("Content-Type")
 }
 

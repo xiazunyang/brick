@@ -13,7 +13,8 @@
 * http
     * 兼容纯Java项目。
     * HTTP网络工具，是对Retrofit2.6.1的再封装，请在自己的工程中实现AbstractHttpUtil抽象类([查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/other/Http.kt))。
-    * 提供常用的Date转换器和反序列化工具
+    * AbstractHttpUtil中默认已集成下载文件的拦截器和转换器，当Retrofit Api的方法里面有用Tag注解标记的File类型的参数、并且返回结果指定为Response<ResponseBody>或ResponseBody或File类型时，作为下载请求来处理。[查看示例](https://juejin.im/post/5dc68e61f265da4d2125dc6d)
+    * 提供常用的Date转换器和反序列化工具。
 * adapter
     * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/WeChatAuthorActivity.kt#L39))。
     * 另外提供列表差异对比并自动处理动画的工具。

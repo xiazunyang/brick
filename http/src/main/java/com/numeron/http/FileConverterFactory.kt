@@ -22,16 +22,7 @@ internal class FileConverterFactory : Converter.Factory() {
         }
 
         fun getFile(responseBody: ResponseBody): File {
-            return if (responseBody is FileResponseBody) {
-                responseBody.file
-            } else try {
-                val field = javaClass.getDeclaredField("delegate")
-                field.isAccessible = true
-                val delegate = field.get(responseBody) as ResponseBody
-                getFile(delegate)
-            } catch (throwable: Throwable) {
-                throw RuntimeException("响应体中没有记录文件信息！或者没有使用Tag标记File类型的参数！", throwable)
-            }
+            return responseBody.toFile()
         }
 
     }
