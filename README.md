@@ -38,3 +38,28 @@
 * stateful-livedata
     * 提供一个在多线程的环境中方便向UI线程发送数据状态的LiveData。[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/contract/ArticleListContract.kt#L58)
     * 配合stateful-layout模块食用，风味更佳！[查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/ArticleListActivity.kt#L52)
+    
+### 在自己的项目中使用
+
+* 在你的项目的根目录下的build.gradle文件中添加以下代码，如果已存在则忽略
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```  
+* 在你的子模块的build.gradle文件中添加以下依赖：  
+
+模块|依赖
+---|---
+adapter|implementation 'com.github.xiazunyang.brick:adapter:1.4.0'
+brick|implementation 'com.github.xiazunyang.brick:brick:1.4.0'
+context-util|implementation 'com.github.xiazunyang.brick:context-util:1.4.0'
+delegate|implementation 'com.github.xiazunyang.brick:delegate:1.4.0'
+http|implementation 'com.github.xiazunyang.brick:http:1.4.0'
+result|implementation 'com.github.xiazunyang.brick:result:1.4.0'
+rx|implementation 'com.github.xiazunyang.brick:rx:1.4.0'
+stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.4.0'
+stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.4.0'
