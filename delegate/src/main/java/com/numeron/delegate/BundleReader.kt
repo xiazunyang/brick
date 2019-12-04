@@ -1,14 +1,16 @@
 @file:JvmName("BundleReader")
 @file:Suppress("UNCHECKED_CAST")
 
-package com.numeron.util
+package com.numeron.delegate
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import java.io.Serializable
 
 
 internal fun <T> Bundle.read(key: String, defaultValue: T): T {
+    Log.e("Bundle.read", defaultValue.toString())
     return when (defaultValue) {
         //基本类型
         is Int -> getInt(key, defaultValue) as T

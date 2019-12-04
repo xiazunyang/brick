@@ -1,6 +1,8 @@
 package com.numeron.brick;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,13 +10,13 @@ import java.util.List;
 public final class ModelFactory {
 
     private final ApiFactory apiFactory;
-    private final DaoFactory daoFactory;
+    private final List<DaoFactory> daoFactories = new ArrayList<>();
 
-    private static ModelFactory modelFactory = new ModelFactory(null, null);
+    private static ModelFactory modelFactory = new ModelFactory(null, Collections.EMPTY_LIST);
 
-    private ModelFactory(ApiFactory apiFactory, DaoFactory daoFactory) {
+    private ModelFactory(ApiFactory apiFactory, List<DaoFactory> daoFactories) {
         this.apiFactory = apiFactory;
-        this.daoFactory = daoFactory;
+        this.daoFactories.addAll(daoFactories);
     }
 
     /**
@@ -26,10 +28,21 @@ public final class ModelFactory {
      * @see retrofit2.Retrofit#create(Class)
      */
     @SuppressWarnings("JavadocReference")
-    static void install(Object retrofit, Object room) {
+    static void install(Object retrofit, Object... room) {
         ApiFactory apiFactory = ApiFactory.create(retrofit);
-        DaoFactory daoFactory = DaoFactory.create(room);
-        modelFactory = new ModelFactory(apiFactory, daoFactory);
+        modelFactory = new ModelFactory(apiFactory, transfer(room));
+    }
+
+    static void addRoom(Object... rooms) {
+        modelFactory.daoFactories.addAll(transfer(rooms));
+    }
+
+    private static List<DaoFactory> transfer(Object... rooms) {
+        ArrayList<DaoFactory> list = new ArrayList<>();
+        for (Object room : rooms) {
+            list.add(DaoFactory.create(room));
+        }
+        return list;
     }
 
     /**
@@ -79,8 +92,14 @@ public final class ModelFactory {
         //如果接口继承了某一个接口，则说明是RoomDao接口
         boolean hasParentInterface = clazz.getInterfaces().length > 0;
         if (!hasAnnotation || hasParentInterface) {
-            if (daoFactory == null) throw new RuntimeException("Brick初始化时没有传入Room实例！");
-            return daoFactory.getDao(clazz);
+            if (daoFactories.isEmpty()) throw new RuntimeException("Brick初始化时没有传入Room实例！");
+            for (DaoFactory daoFactory : daoFactories) {
+                try {
+                    return daoFactory.getDao(clazz);
+                } catch (Exception ignored) {
+                }
+            }
+            throw new RuntimeException("所有的Room实例中都没有返回值为" + clazz + "的方法！");
         } else {
             if (iRetrofit != null) {
                 return iRetrofit.create(clazz);

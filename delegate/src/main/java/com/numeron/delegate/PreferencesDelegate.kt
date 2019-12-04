@@ -1,4 +1,4 @@
-package com.numeron.util
+package com.numeron.delegate
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences

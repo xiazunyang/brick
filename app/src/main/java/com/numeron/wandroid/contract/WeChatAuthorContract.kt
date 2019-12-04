@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.numeron.brick.ViewModel
-import com.numeron.brick.createModel
+import com.numeron.brick.stack
 import com.numeron.wandroid.dao.WeChatAuthorDao
 import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.db.WeChatAuthor
@@ -16,7 +16,7 @@ import retrofit2.http.GET
 
 class WeChatAuthorViewModel : ViewModel() {
 
-    private val weChatAuthorRepository = createModel<WeChatAuthorRepository>()
+    private val weChatAuthorRepository = stack<WeChatAuthorRepository>()
 
     val loadStatusLiveData = MutableLiveData<Pair<State, String>>()
     val weChatAuthorLiveData =

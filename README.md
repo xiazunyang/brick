@@ -54,12 +54,13 @@ allprojects {
 
 模块|依赖
 ---|---
-adapter|implementation 'com.github.xiazunyang.brick:adapter:1.4.0'
-brick|implementation 'com.github.xiazunyang.brick:brick:1.4.0'
-context-util|implementation 'com.github.xiazunyang.brick:context-util:1.4.0'
-delegate|implementation 'com.github.xiazunyang.brick:delegate:1.4.0'
-http|implementation 'com.github.xiazunyang.brick:http:1.4.0'
-result|implementation 'com.github.xiazunyang.brick:result:1.4.0'
-rx|implementation 'com.github.xiazunyang.brick:rx:1.4.0'
-stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.4.0'
-stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.4.0'
+adapter|implementation 'com.github.xiazunyang.brick:adapter:1.4.1'
+brick|implementation 'com.github.xiazunyang.brick:brick:1.4.1'
+chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.4.1'
+context-util|implementation 'com.github.xiazunyang.brick:context-util:1.4.1'
+delegate|implementation 'com.github.xiazunyang.brick:delegate:1.4.1'
+http|implementation 'com.github.xiazunyang.brick:http:1.4.1'
+result|implementation 'com.github.xiazunyang.brick:result:1.4.1'
+rx|implementation 'com.github.xiazunyang.brick:rx:1.4.1'
+stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.4.1'
+stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.4.1'

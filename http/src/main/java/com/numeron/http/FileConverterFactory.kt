@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import java.io.File
 import java.lang.reflect.Type
 
-internal class FileConverterFactory : Converter.Factory() {
+class FileConverterFactory : Converter.Factory() {
 
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, *>? {
         if (type == File::class.java) {
@@ -22,7 +22,16 @@ internal class FileConverterFactory : Converter.Factory() {
         }
 
         fun getFile(responseBody: ResponseBody): File {
-            return responseBody.toFile()
+            return if (responseBody is FileResponseBody) {
+                responseBody.file
+            } else try {
+                val field = responseBody.javaClass.getDeclaredField("delegate")
+                field.isAccessible = true
+                val delegate = field.get(responseBody) as ResponseBody
+                getFile(delegate)
+            } catch (throwable: Throwable) {
+                throw RuntimeException("响应体中没有记录文件信息！或者没有使用Tag标记File类型的参数！", throwable)
+            }
         }
 
     }

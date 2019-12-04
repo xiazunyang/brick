@@ -4,6 +4,7 @@ package com.numeron.brick
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 
 
@@ -15,6 +16,13 @@ fun install(retrofit: Any, room: Any? = null) {
     ModelFactory.install(retrofit, room)
 }
 
+/**
+ * 当使用多个数据库时，请在初始化前，使用此方法追加其它数据库
+ */
+fun addRoom(vararg room: Any) {
+    ModelFactory.addRoom(*room)
+}
+
 
 /**
  * 供外部创建Model的实例的工厂方法
@@ -24,7 +32,7 @@ fun install(retrofit: Any, room: Any? = null) {
  * @return Model    实例
  */
 @JvmOverloads
-fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
+fun <M> stack(clazz: Class<M>, iRetrofit: Any? = null): M {
     return ModelFactory.create(clazz, iRetrofit)
 }
 
@@ -34,7 +42,13 @@ fun <M> createModel(clazz: Class<M>, iRetrofit: Any? = null): M {
  * @param iRetrofit Any? 创建Model的实例时，用于创建Retrofit Api实例的Retrofit或其它工具类
  * @return M Model的实例
  */
-inline fun <reified M> createModel(iRetrofit: Any? = null) = createModel(M::class.java, iRetrofit)
+inline fun <reified M> stack(iRetrofit: Any? = null) = stack(M::class.java, iRetrofit)
+
+@JvmOverloads
+fun <VM : ViewModel> createViewModel(clazz: Class<VM>, store: ViewModelStore, factory: ViewModelProvider.Factory = ViewModelFactory()): VM {
+    return ViewModelProvider(store, factory).get(clazz)
+}
+
 
 /**
  * 创建ViewModel的工厂方法

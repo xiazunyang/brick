@@ -9,12 +9,12 @@ import okio.source
 import java.io.File
 
 
-internal class FileResponseBody(val file: File, private val contentType: String?) : ResponseBody() {
+internal class FileResponseBody(val file: File, private val contentType: MediaType?) : ResponseBody() {
 
     override fun contentLength(): Long = file.length()
 
     override fun source(): BufferedSource = file.source().buffer()
 
-    override fun contentType(): MediaType? = contentType?.toMediaTypeOrNull()
+    override fun contentType(): MediaType? = contentType
 
 }

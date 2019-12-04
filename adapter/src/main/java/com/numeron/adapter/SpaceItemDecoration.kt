@@ -31,18 +31,38 @@ class SpaceItemDecoration(
     }
 
     private fun setOutRectByGrid(rect: Rect, view: View, parent: RecyclerView) {
+        //获取当前View的位置
         val position = parent.getChildAdapterPosition(view) - headerCount
-        val spanCount = getSpanCount(parent)
-        val column = position % spanCount
-        rect.left = space
-        rect.bottom = space
-        rect.top = if(position < spanCount) space else 0
-        rect.right = if(column == spanCount - 1) space else 0
+        //获取有多少个View
+        val itemCount = parent.adapter?.itemCount ?: 0
+        //获取有多少列
+        val columnCount = getSpanCount(parent)
+        //获取有多少行
+        val rowCount = getRowNumber(itemCount, columnCount)
+        //当前是第几列
+        val column = position % columnCount
+        //当前是第几行
+        val row = getRowNumber(position + 1, columnCount)
+        //计算平均间隔
+        val average = space / columnCount
+        rect.left = (columnCount - column) * average
+        rect.top = space
+        rect.right = (column + 1) * average
+        rect.bottom = if (row == rowCount) space else 0
+    }
+
+    private fun getRowNumber(countOrPosition: Int, spanCount: Int): Int {
+        return countOrPosition / spanCount + if (countOrPosition % spanCount > 0) 1 else 0
+    }
+
+    private fun getLinearLayoutOrientation(parent: RecyclerView): Int {
+        return (parent.layoutManager as LinearLayoutManager).orientation
     }
 
     private fun setOutRectByLinear(rect: Rect, view: View, parent: RecyclerView) {
-        rect.top = if (parent.getChildLayoutPosition(view) - headerCount == 0) space else 0
-        rect.left = space
+        val orientation = getLinearLayoutOrientation(parent)
+        rect.top = if (orientation == LinearLayoutManager.VERTICAL && parent.getChildLayoutPosition(view) - headerCount == 0) space else 0
+        rect.left = if (orientation == LinearLayoutManager.HORIZONTAL && parent.getChildLayoutPosition(view) - headerCount == 0) space else 0
         rect.right = space
         rect.bottom = space
     }

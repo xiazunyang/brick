@@ -65,8 +65,8 @@ val Float.sp: Float
     get() = scaledDensity * this + 0.5f
 
 /* from px to sp */
-val Int.toSp: Int
-    get() = (this / scaledDensity + 0.5f).toInt()
+val Int.toSp: Float
+    get() = this / scaledDensity + 0.5f
 
 val Float.toSp: Float
     get() = this / scaledDensity + 0.5f

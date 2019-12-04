@@ -1,5 +1,7 @@
 package com.numeron.brick;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Method;
 
 class ApiFactory implements IRetrofit {
@@ -33,7 +35,7 @@ class ApiFactory implements IRetrofit {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T create(Class<T> clazz) {
+    public <T> T create(@NotNull Class<T> clazz) {
         //尝试通过反射来创建Retrofit Api
         if (isInitialized()) {
             try {

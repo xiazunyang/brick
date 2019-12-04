@@ -1,5 +1,7 @@
 package com.numeron.brick;
 
+import androidx.annotation.NonNull;
+
 /**
  * Retrofit中并没有提供相应的接口，所以此接口是对Retrofit中的create方法的代理
  * 当项目中使用了二次封装的Retrofit工具类，让工具类实现此接口，在实现方法中调用Retrofit实际的create方法
@@ -8,8 +10,9 @@ package com.numeron.brick;
  *
  * @see retrofit2.Retrofit#create(Class)
  */
+@SuppressWarnings("JavadocReference")
 public interface IRetrofit {
 
-    <T> T create(Class<T> clazz);
+    <T> T create(@NonNull Class<T> clazz);
 
 }

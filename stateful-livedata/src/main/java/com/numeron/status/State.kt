@@ -1,19 +1,19 @@
 package com.numeron.status
 
-/* 表示数据的状态，[value]在成功时有值*/
+/* 表示数据的状态，[isSuccess]表示成功状态，[value]在成功时表示数据，其它表示*/
 sealed class State<T>(val value: T)
 
 /* 表示数据获取成功，用sealed修饰的目的是为了不让其它人使用这个类 */
 sealed class Success<T>(value: T) : State<T>(value)
 
-/* 表示数据为空，Empty是Success的子类 */
-class Empty(val message: String) : Success<Nothing?>(null)
+/* 表示数据为空 */
+data class Empty(val message: String) : Success<Nothing?>(null)
 
 /* 表示获取数据失败 */
-class Failure(val message: String, val cause: Throwable) : State<Nothing?>(null)
+data class Failure(val message: String, val cause: Throwable) : State<Nothing?>(null)
 
 /* 表示正在加载数据 */
-class Loading(val message: String, val progress: Float) : State<Nothing?>(null)
+data class Loading(val message: String, val progress: Float) : State<Nothing?>(null)
 
 /* Success的实现类，创建后向上转型为Success后提供给外部 */
 
@@ -25,14 +25,14 @@ fun <T> successOf(value: T): Success<T> = RealSuccess(value)
 
 fun emptyOf(message: String) = Empty(message)
 
-fun failureOf(cause: Throwable, message: String) = Failure(message, cause)
+fun failureOf(message: String, cause: Throwable) = Failure(message, cause)
 
-fun loadingOf(message: String, progress: Float) = Loading(message, progress)
+fun loadingOf(message: String, progress: Float = 0f) = Loading(message, progress)
 
-/* status functions */
+/* state functions */
 
 inline fun <T> State<out T?>.onSuccess(block: (T) -> Unit): State<out T?> {
-    if (value != null) {
+    if (this is Success && value != null) {
         block(value)
     }
     return this

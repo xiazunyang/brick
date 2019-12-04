@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="status_empty">没有数据</string>
-    <string name="status_error">加载失败</string>
-    <string name="status_loading">加载中……</string>
+    <string name="state_empty">没有数据</string>
+    <string name="state_error">加载失败</string>
+    <string name="state_loading">加载中…</string>
 </resources>

@@ -1,9 +1,6 @@
-package com.numeron.util
+package com.numeron.delegate
 
 import android.app.Activity
-import android.os.Bundle
-import android.os.Parcelable
-import java.io.Serializable
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

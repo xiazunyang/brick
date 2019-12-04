@@ -2,14 +2,12 @@
 
 package com.numeron.status
 
-import com.numeron.common.State
-
 /* 把密封类转换为StatusLayout可识别的枚举类 */
-fun <T> com.numeron.status.State<out T?>.convert(): State {
+fun <T> State<out T?>.convert(): com.numeron.common.State {
     return when (this) {
-        is Empty -> State.Empty
-        is Failure -> State.Failure
-        is Success -> State.Success
-        is Loading -> State.Loading
+        is Empty -> com.numeron.common.State.Empty
+        is Failure -> com.numeron.common.State.Failure
+        is Success -> com.numeron.common.State.Success
+        is Loading -> com.numeron.common.State.Loading
     }
 }

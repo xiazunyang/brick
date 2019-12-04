@@ -62,6 +62,13 @@ fun <F : FragmentActivity> F.startActivityForResult(
     return emptyFragment.startActivityForResult(requestCode, intent, options, callback)
 }
 
+fun <F : Fragment> F.startActivityForResult(
+        intent: Intent,
+        options: Bundle? = null,
+        callback: (Intent) -> Unit = {}): LambdaHolder<Intent> {
+    return requireActivity().startActivityForResult(intent, options, callback)
+}
+
 
 /**
  * 申请权限的扩展方法，通过lambda传入回调，不需要重写[Activity#onRequestPermissionsResult]方法

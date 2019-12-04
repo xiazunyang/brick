@@ -8,9 +8,9 @@ import com.numeron.adapter.PagedBindingAdapter
 import com.numeron.adapter.SpaceItemDecoration
 import com.numeron.brick.createViewModel
 import com.numeron.util.dp
+import com.numeron.view.StatefulLayoutMessageObserver
 import com.numeron.wandroid.entity.db.WeChatAuthor
 import com.numeron.wandroid.other.*
-import com.numeron.view.StatefulMessageObserver
 import com.numeron.wandroid.R
 import com.numeron.wandroid.contract.WeChatAuthorViewModel
 import com.numeron.wandroid.databinding.RecyclerItemWeChatAuthorLayoutBinding
@@ -33,7 +33,7 @@ class WeChatAuthorActivity : AppCompatActivity() {
         weChatAuthorRefreshLayout.isEnabled = connectivityManager.isDefaultNetworkActive
         weChatAuthorStatusLayout.setLoadingOperation(weChatAuthorRefreshLayout::setRefreshing)
         weChatAuthorViewModel.weChatAuthorLiveData.observe(this, Observer(adapter::submitList))
-        weChatAuthorViewModel.loadStatusLiveData.observe(this, StatefulMessageObserver(weChatAuthorStatusLayout))
+        weChatAuthorViewModel.loadStatusLiveData.observe(this, StatefulLayoutMessageObserver(weChatAuthorStatusLayout))
     }
 
     private inner class WeChatAuthorAdapter : PagedBindingAdapter<WeChatAuthor,

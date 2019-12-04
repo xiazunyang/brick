@@ -9,7 +9,7 @@
         <attr name="loadingTextView" format="reference" />
         <attr name="failureTextView" format="reference" />
         <attr name="emptyTextView" format="reference" />
-        <attr name="contentView" format="reference" />
+        <attr name="successView" format="reference" />
         <attr name="loadingView" format="reference" />
         <attr name="failureView" format="reference" />
         <attr name="emptyView" format="reference" />

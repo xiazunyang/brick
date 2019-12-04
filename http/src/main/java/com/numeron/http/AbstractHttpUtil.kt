@@ -2,7 +2,6 @@ package com.numeron.http
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -62,17 +61,9 @@ abstract class AbstractHttpUtil {
      */
     protected open val certificates: Array<InputStream> = emptyArray()
 
-    protected val httpLoggingInterceptor = HttpLoggingInterceptor()
-
-    protected val loggingLevel = HttpLoggingInterceptor.Level.BODY
-
     val retrofit by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createRetrofit)
 
     val okHttpClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED, ::createOkHttpClient)
-
-    init {
-        httpLoggingInterceptor.level = loggingLevel
-    }
 
     /**
      * 默认的构建Retrofit的方法，若无法满足需求，请重写此方法
@@ -80,7 +71,6 @@ abstract class AbstractHttpUtil {
     protected open fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(FileConverterFactory())
                 .apply {
                     convertersFactories.map(::addConverterFactory)
                     callAdapterFactories.map(::addCallAdapterFactory)
@@ -106,8 +96,6 @@ abstract class AbstractHttpUtil {
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .connectTimeout(timeout, TimeUnit.SECONDS)
                 .addInterceptor(AddHeaderInterceptor(header))
-                .addInterceptor(FileDownloadInterceptor())
-                .addInterceptor(httpLoggingInterceptor)
                 .apply {
                     interceptors.map(::addInterceptor)
                 }
@@ -121,7 +109,6 @@ abstract class AbstractHttpUtil {
         return okHttpClient.newBuilder().also(build).build()
     }
 
-    @Suppress("DEPRECATION")
     private fun OkHttpClient.Builder.installHttpsCertificates(): OkHttpClient.Builder {
         if (certificates.isEmpty()) return this
         val x509TrustManager: X509TrustManager = prepareTrustManager(*certificates).fetch()
