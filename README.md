@@ -1,4 +1,6 @@
 ###### 此项目是我个人在工作(Android开发)中不断总结、抽象而来，囊括了架构、网络、线程、UI等，每个功能都单独整理到一个模块之中，可以单独引用。看得上哪个模块，按需自取，更欢迎不吝赐教。       
+  
+![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)
 
 ### 模块功能介绍
 
@@ -18,6 +20,9 @@
 * adapter
     * RecyclerView.Adapter辅助工具，完成Adapter仅需实现1个方法([查看示例](https://github.com/xiazunyang/brick/blob/master/app/src/main/java/com/numeron/wandroid/activity/WeChatAuthorActivity.kt#L39))。
     * 另外提供列表差异对比并自动处理动画的工具。
+* chameleon
+    * 可以动态切换主题颜色的工具，非常轻量级，侵入性低，切换时无卡顿。  
+    ![image](https://github.com/xiazunyang/brick/blob/master/chameleon/demo.gif)
 * result
     * 能够精简在申请权限时和Activity之间传递参数和回传参数的代码。
 * rx
@@ -54,13 +59,13 @@ allprojects {
 
 模块|依赖
 ---|---
-adapter|implementation 'com.github.xiazunyang.brick:adapter:1.4.1'
-brick|implementation 'com.github.xiazunyang.brick:brick:1.4.1'
-chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.4.1'
-context-util|implementation 'com.github.xiazunyang.brick:context-util:1.4.1'
-delegate|implementation 'com.github.xiazunyang.brick:delegate:1.4.1'
-http|implementation 'com.github.xiazunyang.brick:http:1.4.1'
-result|implementation 'com.github.xiazunyang.brick:result:1.4.1'
-rx|implementation 'com.github.xiazunyang.brick:rx:1.4.1'
-stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.4.1'
-stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.4.1'
+adapter|implementation 'com.github.xiazunyang.brick:adapter:1.4.2'
+brick|implementation 'com.github.xiazunyang.brick:brick:1.4.2'
+chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.4.2'
+context-util|implementation 'com.github.xiazunyang.brick:context-util:1.4.2'
+delegate|implementation 'com.github.xiazunyang.brick:delegate:1.4.2'
+http|implementation 'com.github.xiazunyang.brick:http:1.4.2'
+result|implementation 'com.github.xiazunyang.brick:result:1.4.2'
+rx|implementation 'com.github.xiazunyang.brick:rx:1.4.2'
+stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.4.2'
+stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.4.2'

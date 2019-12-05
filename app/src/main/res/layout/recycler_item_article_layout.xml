@@ -15,14 +15,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:padding="4dp">
+        android:background="?attr/colorBackgroundLayer1"
+        android:padding="4dp"
+        tools:layout_margin="4dp">
 
         <TextView
             android:id="@+id/articleTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{article.title}"
+            android:textColor="?attr/colorText"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,6 +34,7 @@
             android:id="@+id/articleDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorText"
             app:bindDate="@{article.publishTime}"
             app:formatPattern="@{`yyyy年MM月dd日`}"
             app:layout_constraintStart_toStartOf="parent"

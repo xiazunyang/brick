@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/weChatAuthorRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.numeron.view.StatefulLayout
-        android:id="@+id/weChatAuthorStatusLayout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/weChatAuthorToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:title="你好啊" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/weChatAuthorRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:state="success">
+        android:background="?attr/colorBackground">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/weChatAuthorRecyclerView"
+        <com.numeron.view.StatefulLayout
+            android:id="@+id/weChatAuthorStatusLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/recycler_item_we_chat_author_layout" />
+            app:state="success">
 
-    </com.numeron.view.StatefulLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/weChatAuthorRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:layout_margin="4dp"
+                tools:listitem="@layout/recycler_item_we_chat_author_layout"
+                tools:padding="4dp" />
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </com.numeron.view.StatefulLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

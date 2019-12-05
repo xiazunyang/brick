@@ -6,14 +6,23 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorBackground">@color/colorBackground</item>
+        <item name="colorBackgroundLayer1">@color/colorBackgroundLayer1</item>
+        <item name="colorText">@color/colorText</item>
+        <item name="colorHint">@color/colorHint</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
-    <style name="Transparent" parent="@android:style/Theme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    <style name="AppTheme.Night" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimaryNight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
+        <item name="colorAccent">@color/colorAccentNight</item>
+        <item name="colorBackground">@color/colorBackgroundNight</item>
+        <item name="colorBackgroundLayer1">@color/colorBackgroundLayer1Night</item>
+        <item name="colorText">@color/colorTextNight</item>
+        <item name="colorHint">@color/colorHintNight</item>
     </style>
 
 </resources>

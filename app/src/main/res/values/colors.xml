@@ -3,4 +3,16 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorBackgroundLayer1">#E7E7E7</color>
+    <color name="colorText">#000000</color>
+    <color name="colorHint">#888888</color>
+
+    <color name="colorPrimaryNight">#3C3F41</color>
+    <color name="colorPrimaryDarkNight">#323232</color>
+    <color name="colorAccentNight">#810000</color>
+    <color name="colorBackgroundNight">#2B2B2B</color>
+    <color name="colorBackgroundLayer1Night">#383838</color>
+    <color name="colorTextNight">#707070</color>
+    <color name="colorHintNight">#3D3D3D</color>
 </resources>

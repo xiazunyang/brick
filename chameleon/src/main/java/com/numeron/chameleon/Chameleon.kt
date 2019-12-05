@@ -171,6 +171,10 @@ open class Chameleon(context: Context, private val themeId: Int) {
             activity.setTheme(activity.currentThemeId)
         }
 
+        fun getThemeId(context: Context): Int {
+            return context.currentThemeId
+        }
+
         private var Context.currentThemeId: Int
             get() = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                     .getInt(SHARED_PREFERENCES_KEY, 0)

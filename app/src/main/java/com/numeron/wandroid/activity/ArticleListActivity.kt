@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.numeron.adapter.BindingHolder
 import com.numeron.adapter.PagedBindingAdapter
@@ -28,7 +27,7 @@ fun Context.startArticleListActivity(chapterId: Int) {
 }
 
 
-class ArticleListActivity : AppCompatActivity(), ArticleListParamProvider {
+class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
 
     override val chapterId: Int by ActivityExtraDelegate(0)
 
@@ -39,7 +38,11 @@ class ArticleListActivity : AppCompatActivity(), ArticleListParamProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_list_layout)
-
+        setSupportActionBar(articleListToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        articleListToolbar.setNavigationOnClickListener {
+            finish()
+        }
         val adapter = ArticleAdapter()
         articleListRecyclerView.adapter = adapter
         articleListRecyclerView.addItemDecoration(SpaceItemDecoration(4.dp))

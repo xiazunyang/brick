@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shadow-Demo</string>
+    <string name="night_mode">夜间模式</string>
 </resources>

@@ -61,8 +61,11 @@ class SpaceItemDecoration(
 
     private fun setOutRectByLinear(rect: Rect, view: View, parent: RecyclerView) {
         val orientation = getLinearLayoutOrientation(parent)
-        rect.top = if (orientation == LinearLayoutManager.VERTICAL && parent.getChildLayoutPosition(view) - headerCount == 0) space else 0
-        rect.left = if (orientation == LinearLayoutManager.HORIZONTAL && parent.getChildLayoutPosition(view) - headerCount == 0) space else 0
+        val isFirstView = parent.getChildLayoutPosition(view) - headerCount == 0
+        val top = if (isFirstView || orientation == LinearLayoutManager.HORIZONTAL) space else 0
+        val left = if(isFirstView || orientation == LinearLayoutManager.VERTICAL) space else 0
+        rect.top = top
+        rect.left = left
         rect.right = space
         rect.bottom = space
     }

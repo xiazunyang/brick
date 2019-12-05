@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,22 +12,24 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/weChatAuthorRootView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorBackgroundLayer1"
+        tools:layout_margin="4dp">
 
         <TextView
             android:id="@+id/weChatAuthorNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
             android:gravity="center"
             android:minLines="2"
-            android:padding="4dp"
             android:text="@{weChatAuthor.name}"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorText"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="123456" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
