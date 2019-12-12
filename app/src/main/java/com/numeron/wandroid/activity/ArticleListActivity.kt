@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import com.numeron.adapter.BindingHolder
 import com.numeron.adapter.PagedBindingAdapter
 import com.numeron.adapter.SpaceItemDecoration
-import com.numeron.brick.createViewModel
+import com.numeron.brick.lazyViewModel
 import com.numeron.delegate.ActivityExtraDelegate
 import com.numeron.starter.startActivity
 import com.numeron.util.dp
@@ -31,9 +31,7 @@ class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
 
     override val chapterId: Int by ActivityExtraDelegate(0)
 
-    private val articleListViewModel: ArticleListViewModel by lazy {
-        createViewModel<ArticleListViewModel>(this)
-    }
+    private val articleListViewModel: ArticleListViewModel by lazyViewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,4 +1,5 @@
 @file:JvmName("Brick")
+@file:Suppress("FunctionName")
 
 package com.numeron.brick
 
@@ -32,7 +33,7 @@ fun addRoom(vararg room: Any) {
  * @return Model    实例
  */
 @JvmOverloads
-fun <M> stack(clazz: Class<M>, iRetrofit: Any? = null): M {
+fun <M> autowired(clazz: Class<M>, iRetrofit: Any? = null): M {
     return ModelFactory.create(clazz, iRetrofit)
 }
 
@@ -42,10 +43,18 @@ fun <M> stack(clazz: Class<M>, iRetrofit: Any? = null): M {
  * @param iRetrofit Any? 创建Model的实例时，用于创建Retrofit Api实例的Retrofit或其它工具类
  * @return M Model的实例
  */
-inline fun <reified M> stack(iRetrofit: Any? = null) = stack(M::class.java, iRetrofit)
+inline fun <reified M> autowired(iRetrofit: Any? = null) = autowired(M::class.java, iRetrofit)
+
+
+inline fun <reified M> lazyAutowired(iRetrofit: Any? = null): Lazy<M> {
+    return lazy {
+        autowired<M>(iRetrofit)
+    }
+}
+
 
 @JvmOverloads
-fun <VM : ViewModel> createViewModel(clazz: Class<VM>, store: ViewModelStore, factory: ViewModelProvider.Factory = ViewModelFactory()): VM {
+fun <VM : ViewModel> viewModel(clazz: Class<VM>, store: ViewModelStore, factory: ViewModelProvider.Factory = ViewModelFactory()): VM {
     return ViewModelProvider(store, factory).get(clazz)
 }
 
@@ -58,16 +67,16 @@ fun <VM : ViewModel> createViewModel(clazz: Class<VM>, store: ViewModelStore, fa
  * @return VM 创建后的实例
  */
 @JvmOverloads
-fun <VM : ViewModel> ViewModelStoreOwner.createViewModel(
+fun <VM : ViewModel> ViewModelStoreOwner.viewModel(
         clazz: Class<VM>, factory: ViewModelProvider.Factory = ViewModelFactory()): VM {
     return ViewModelProvider(this, factory).get(clazz)
 }
 
 /**
- * [createViewModel] 的inline方法
+ * [viewModel] 的inline方法
  */
-inline fun <reified VM : ViewModel> ViewModelStoreOwner.createViewModel(factory: ViewModelProvider.Factory): VM {
-    return createViewModel(VM::class.java, factory)
+inline fun <reified VM : ViewModel> ViewModelStoreOwner.viewModel(factory: ViewModelProvider.Factory): VM {
+    return viewModel(VM::class.java, factory)
 }
 
 /**
@@ -75,6 +84,13 @@ inline fun <reified VM : ViewModel> ViewModelStoreOwner.createViewModel(factory:
  * @param arguments Array<out Any> ViewModel的参数
  * @return VM 创建后的实例
  */
-inline fun <reified VM : ViewModel> ViewModelStoreOwner.createViewModel(vararg arguments: Any): VM {
-    return createViewModel(ViewModelFactory(*arguments))
+
+inline fun <reified VM : ViewModel> ViewModelStoreOwner.viewModel(vararg arguments: Any): VM {
+    return viewModel(ViewModelFactory(*arguments))
+}
+
+inline fun <reified VM : ViewModel> ViewModelStoreOwner.lazyViewModel(vararg arguments: Any): Lazy<VM> {
+    return lazy {
+        viewModel<VM>(*arguments)
+    }
 }

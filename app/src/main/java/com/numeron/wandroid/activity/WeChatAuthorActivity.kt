@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import com.numeron.adapter.BindingHolder
 import com.numeron.adapter.PagedBindingAdapter
 import com.numeron.adapter.SpaceItemDecoration
-import com.numeron.brick.createViewModel
+import com.numeron.brick.lazyViewModel
 import com.numeron.chameleon.Chameleon
 import com.numeron.util.dp
 import com.numeron.view.StatefulLayoutMessageObserver
@@ -20,9 +20,7 @@ import kotlinx.android.synthetic.main.activity_we_chat_author_layout.*
 
 class WeChatAuthorActivity : BaseActivity() {
 
-    private val weChatAuthorViewModel by lazy {
-        createViewModel<WeChatAuthorViewModel>()
-    }
+    private val weChatAuthorViewModel: WeChatAuthorViewModel by lazyViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

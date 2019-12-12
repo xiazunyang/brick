@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.numeron.brick.ViewModel
-import com.numeron.brick.stack
+import com.numeron.brick.lazyAutowired
 import com.numeron.wandroid.dao.ArticleDao
 import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.Paged
@@ -26,7 +26,7 @@ interface ArticleListParamProvider {
 
 class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) : ViewModel() {
 
-    private val articleRepository = stack<ArticleRepository>()
+    private val articleRepository: ArticleRepository by lazyAutowired()
 
     private val pagedConfig = PagedList.Config.Builder()
             .setPageSize(20)
