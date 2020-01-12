@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 typealias ColorProcessor = (View, Int) -> Unit
 
@@ -107,6 +108,7 @@ open class Chameleon(context: Context, private val themeId: Int) {
      * @param view View 传入当前界面中任意的一个View对象，不能是Dialog中的View。
      */
     fun apply(view: View) {
+        view.context.setTheme(themeId)
         view.context.currentThemeId = themeId
         eachView(view.rootView)
     }
@@ -149,12 +151,66 @@ open class Chameleon(context: Context, private val themeId: Int) {
         processorColors[viewId]?.let { (color, processor) ->
             processor(view, color)
         }
+        //处理RecyclerView中未显示的缓存视图
+        if (view is RecyclerView) {
+            recyclerViewProcess(view)
+        }
         //遍历子View
         if (view is ViewGroup) {
             repeat(view.childCount) {
                 eachView(view.getChildAt(it))
             }
         }
+    }
+
+    private fun recyclerViewProcess(recyclerView: RecyclerView) {
+        //从回收器中修改
+        val recycler = getRecycler(recyclerView)
+        eachCaches(recycler, "mCachedViews")
+        eachCaches(recycler, "mChangedScrap")
+        eachCaches(recycler, "mAttachedScrap")
+        //从循环池中修改
+        eachPool(recyclerView.recycledViewPool)
+    }
+
+    private fun getRecycler(recyclerView: RecyclerView): RecyclerView.Recycler {
+        val recyclerField = RecyclerView::class.java.getDeclaredField("mRecycler")
+        recyclerField.isAccessible = true
+        return recyclerField.get(recyclerView) as RecyclerView.Recycler
+    }
+
+    private fun eachPool(pool: RecyclerView.RecycledViewPool) {
+        val field = RecyclerView.RecycledViewPool::class.java.getDeclaredField("mScrap")
+        field.isAccessible = true
+        val scrap = field.get(pool) ?: return
+        if (scrap is SparseArray<*>) {
+            scrap.valueIterator().forEach { scrapData ->
+                val scrapHeap = getScrapHeap(scrapData ?: return@forEach) ?: return@forEach
+                scrapHeap.forEach { viewHolder ->
+                    if (viewHolder is RecyclerView.ViewHolder) {
+                        eachView(viewHolder.itemView)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun eachCaches(recycler: RecyclerView.Recycler, fieldName: String) {
+        val field = recycler.javaClass.getDeclaredField(fieldName)
+        field.isAccessible = true
+        val list = field.get(recycler) as? List<*> ?: return
+        list.forEach {
+            if (it is RecyclerView.ViewHolder) {
+                eachView(it.itemView)
+            }
+        }
+    }
+
+    private fun getScrapHeap(any: Any): List<*>? {
+        val scrapDataClass = Class.forName("androidx.recyclerview.widget.RecyclerView\$RecycledViewPool\$ScrapData")
+        val scrapHeapField = scrapDataClass.getDeclaredField("mScrapHeap")
+        scrapHeapField.isAccessible = true
+        return scrapHeapField.get(any) as? List<*>
     }
 
     companion object {
@@ -171,6 +227,7 @@ open class Chameleon(context: Context, private val themeId: Int) {
             activity.setTheme(activity.currentThemeId)
         }
 
+        @JvmStatic
         fun getThemeId(context: Context): Int {
             return context.currentThemeId
         }
@@ -184,6 +241,13 @@ open class Chameleon(context: Context, private val themeId: Int) {
                         .putInt(SHARED_PREFERENCES_KEY, value)
                         .apply()
             }
+
+        private fun <T> SparseArray<T>.valueIterator(): Iterator<T> = object : Iterator<T> {
+            var index = 0
+            override fun hasNext() = index < size()
+            override fun next() = valueAt(index++)
+        }
+
     }
 
 }
