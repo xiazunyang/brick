@@ -1,78 +1,54 @@
 package com.numeron.status
 
-import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
+import com.numeron.common.State
 
-open class StatefulLiveData<T> @JvmOverloads constructor(
-        private val empty: String = "没有可用数据",
-        private val loading: String = "正在加载数据",
-        private val failure: String = "数据加载失败"
-) : LiveData<State<out T?>>() {
+class StatefulLiveData<T> @JvmOverloads constructor(
+        private val empty: String = "没有数据",
+        private val loading: String = "正在加载",
+        private val success: String = "加载成功",
+        private val failure: String = "加载失败"
+) : LiveData<Stateful<T>>() {
 
-    @MainThread
-    @JvmOverloads
-    fun setLoading(loading: String = this.loading, progress: Float = 0f) {
-        value = loadingOf(loading, progress)
-    }
+    private val impl: StatefulImpl<T>
+        get() = super.getValue() as? StatefulImpl<T> ?: StatefulImpl(State.Non)
 
-    @MainThread
-    fun setLoading(progress: Float) {
-        setLoading(this.loading, progress)
-    }
+    val value: T?
+        @JvmName("value")
+        get() = (super.getValue() as? StatefulImpl)?.success
+
+    val requireValue: T
+        @JvmName("requireValue")
+        get() = value!!
 
     fun postLoading(progress: Float) {
         postLoading(this.loading, progress)
     }
 
     @JvmOverloads
-    fun postLoading(loading: String = this.loading, progress: Float = 0f) {
-        postValue(loadingOf(loading, progress))
+    fun postLoading(message: String = this.loading, progress: Float = -1f) {
+        postValue(impl.copy(state = State.Loading, progress = progress, message = message))
     }
 
-    @MainThread
-    fun setSuccess(value: T) {
-        when {
-            value is Collection<*> && value.isEmpty() -> emptyOf(empty)
-            value is Array<*> && value.isEmpty() -> emptyOf(empty)
-            else -> successOf(value)
-        }.let(::setValue)
-    }
-
-    fun postSuccess(value: T) {
-        when {
-            value is Collection<*> && value.isEmpty() -> emptyOf(empty)
-            value is Array<*> && value.isEmpty() -> emptyOf(empty)
-            else -> successOf(value)
-        }.let(::postValue)
-    }
-
-    @MainThread
-    @JvmOverloads
-    fun setEmpty(empty: String = this.empty) {
-        value = emptyOf(empty)
+    fun postSuccess(value: T, message: String? = this.success) {
+        postValue(impl.copy(state = State.Success, success = value, message = message))
     }
 
     @JvmOverloads
     fun postEmpty(empty: String = this.empty) {
-        postValue(emptyOf(empty))
+        postValue(impl.copy(state = State.Empty, message = empty))
     }
 
-    @MainThread
-    fun setFailure(cause: Throwable, failure: String = this.failure) {
-        value = failureOf(failure, cause)
-    }
-
-    fun postFailure(cause: Throwable, failure: String = this.failure) {
-        postValue(failureOf(failure, cause))
-    }
-
-    @MainThread
-    fun setFailure(cause: Throwable) {
-        setFailure(cause, this.failure)
+    fun postFailure(cause: Throwable, message: String = this.failure) {
+        postValue(impl.copy(state = State.Failure, failure = cause, message = message))
     }
 
     fun postFailure(cause: Throwable) {
-        postFailure(cause, this.failure)
+        postFailure(cause, failure)
+    }
+
+    fun postMessage(message: String) {
+        postValue(impl.copy(state = State.Non, message = message))
     }
 
 }
