@@ -1,21 +1,19 @@
-package com.numeron.status
+package com.numeron.stateful.livedata
 
 import androidx.lifecycle.LiveData
 import com.numeron.common.State
 
 class StatefulLiveData<T> @JvmOverloads constructor(
-        private val empty: String = "没有数据",
         private val loading: String = "正在加载",
-        private val success: String = "加载成功",
         private val failure: String = "加载失败"
 ) : LiveData<Stateful<T>>() {
 
     private val impl: StatefulImpl<T>
-        get() = super.getValue() as? StatefulImpl<T> ?: StatefulImpl(State.Non)
+        get() = getValue() as? StatefulImpl ?: StatefulImpl(State.Empty)
 
     val value: T?
         @JvmName("value")
-        get() = (super.getValue() as? StatefulImpl)?.success
+        get() = (getValue() as? StatefulImpl)?.success
 
     val requireValue: T
         @JvmName("requireValue")
@@ -30,13 +28,8 @@ class StatefulLiveData<T> @JvmOverloads constructor(
         postValue(impl.copy(state = State.Loading, progress = progress, message = message))
     }
 
-    fun postSuccess(value: T, message: String? = this.success) {
-        postValue(impl.copy(state = State.Success, success = value, message = message))
-    }
-
-    @JvmOverloads
-    fun postEmpty(empty: String = this.empty) {
-        postValue(impl.copy(state = State.Empty, message = empty))
+    fun postSuccess(value: T) {
+        postValue(impl.copy(state = State.Success, success = value))
     }
 
     fun postFailure(cause: Throwable, message: String = this.failure) {
@@ -48,7 +41,18 @@ class StatefulLiveData<T> @JvmOverloads constructor(
     }
 
     fun postMessage(message: String) {
-        postValue(impl.copy(state = State.Non, message = message))
+        postValue(impl.copy(message = message, previous = impl.version, version = impl.version + 1))
+    }
+
+    companion object {
+
+        fun <T> LiveData<T>.toStateful(loading: String = "正在加载",
+                                       failure: String = "加载失败"): StatefulLiveData<T> {
+            val statefulLiveData = StatefulLiveData<T>(loading, failure)
+            observeForever(statefulLiveData::postSuccess)
+            return statefulLiveData
+        }
+
     }
 
 }
