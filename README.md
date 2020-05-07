@@ -59,13 +59,13 @@ allprojects {
 
 模块|依赖
 ---|---
-adapter|implementation 'com.github.xiazunyang.brick:adapter:1.5.0'
-brick|implementation 'com.github.xiazunyang.brick:brick:1.5.0'
-chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.5.0'
-context-util|implementation 'com.github.xiazunyang.brick:context-util:1.5.0'
-delegate|implementation 'com.github.xiazunyang.brick:delegate:1.5.0'
-http|implementation 'com.github.xiazunyang.brick:http:1.5.0'
-result|implementation 'com.github.xiazunyang.brick:result:1.5.0'
-rx|implementation 'com.github.xiazunyang.brick:rx:1.5.0'
-stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.5.0'
-stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.5.0'
+adapter|implementation 'com.github.xiazunyang.brick:adapter:1.6.0'
+brick|implementation 'com.github.xiazunyang.brick:brick:1.6.0'
+chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.6.0'
+context-util|implementation 'com.github.xiazunyang.brick:context-util:1.6.0'
+delegate|implementation 'com.github.xiazunyang.brick:delegate:1.6.0'
+http|implementation 'com.github.xiazunyang.brick:http:1.6.0'
+result|implementation 'com.github.xiazunyang.brick:result:1.6.0'
+rx|implementation 'com.github.xiazunyang.brick:rx:1.6.0'
+stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.6.0'
+stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.6.0'
