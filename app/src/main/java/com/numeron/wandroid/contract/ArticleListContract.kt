@@ -1,16 +1,15 @@
 package com.numeron.wandroid.contract
 
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.paging.toLiveData
 import com.numeron.brick.ViewModel
 import com.numeron.brick.lazyAutowired
 import com.numeron.wandroid.dao.ArticleDao
 import com.numeron.wandroid.entity.ApiResponse
 import com.numeron.wandroid.entity.Paged
 import com.numeron.wandroid.entity.db.Article
-import com.numeron.common.State
-import com.numeron.wandroid.other.IgnoreExceptionHandler
+import com.numeron.stateful.livedata.StatefulExceptionHandler
+import com.numeron.stateful.livedata.StatefulLiveData.Companion.toStateful
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.http.GET
@@ -33,12 +32,10 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
             .setInitialLoadSizeHint(20)
             .build()
 
-    val loadStateLiveData = MutableLiveData<Pair<State, String>>()
-
     val articleListLiveData =
-            LivePagedListBuilder(articleRepository.sourceFactory(paramProvider.chapterId), pagedConfig)
-                    .setBoundaryCallback(BoundaryCallback())
-                    .build()
+            articleRepository.sourceFactory(paramProvider.chapterId)
+                    .toLiveData(pagedConfig, boundaryCallback = BoundaryCallback())
+                    .toStateful()
 
     fun refresh() {
         launch {
@@ -52,24 +49,15 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
 
         //列表为空时，此方法会在主线程中被调用
         override fun onZeroItemsLoaded() {
-            launch {
-                try {
-                    //显示等待动画
-                    loadStateLiveData.postValue(State.Loading to "正在加载文章列表，请稍候...")
-                    delay(3000)
-                    val paged = articleRepository.getArticleList(paramProvider.chapterId, 1).data
-                    currentPage = paged.curPage
-                    val list = paged.list
-                    articleRepository.insert(list)
-                    if (list.isEmpty()) {
-                        loadStateLiveData.postValue(State.Empty to "没有相关文章")
-                    } else {
-                        loadStateLiveData.postValue(State.Success to "文章列表获取成功")
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    loadStateLiveData.postValue(State.Failure to (e.message ?: "加载文章列表时发生了错误"))
-                }
+            launch(StatefulExceptionHandler(articleListLiveData)) {
+                //显示等待动画
+                articleListLiveData.postLoading("正在加载文章列表，请稍候...")
+                delay(3000)
+                val paged = articleRepository.getArticleList(paramProvider.chapterId, 1).data
+                currentPage = paged.curPage
+                val list = paged.list
+                //保存到数据库时，articleListLiveData会自动触发postSuccess
+                articleRepository.insert(list)
             }
         }
 
@@ -85,7 +73,7 @@ class ArticleListViewModel(private val paramProvider: ArticleListParamProvider) 
 
         private fun loadAndSaveArticle(page: Int) {
             //此协程中使用ExceptionHandler来处理异常
-            launch(IgnoreExceptionHandler()) {
+            launch(StatefulExceptionHandler(articleListLiveData)) {
                 val paged = articleRepository.getArticleList(paramProvider.chapterId, page).data
                 currentPage = paged.curPage
                 val list = paged.list

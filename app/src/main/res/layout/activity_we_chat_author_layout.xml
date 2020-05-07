@@ -30,8 +30,7 @@
         <com.numeron.view.StatefulLayout
             android:id="@+id/weChatAuthorStatusLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:state="success">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/weChatAuthorRecyclerView"

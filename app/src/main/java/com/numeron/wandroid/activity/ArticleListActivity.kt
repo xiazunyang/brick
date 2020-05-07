@@ -4,15 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.numeron.adapter.BindingHolder
 import com.numeron.adapter.PagedBindingAdapter
 import com.numeron.adapter.SpaceItemDecoration
 import com.numeron.brick.lazyViewModel
+import com.numeron.common.State
 import com.numeron.delegate.ActivityExtraDelegate
 import com.numeron.starter.startActivity
+import com.numeron.stateful.livedata.StatefulCallback
+import com.numeron.stateful.livedata.StatefulObserver
 import com.numeron.util.dp
-import com.numeron.view.StatefulLayoutMessageObserver
+import com.numeron.util.toast
 import com.numeron.wandroid.entity.db.Article
 import com.numeron.wandroid.other.*
 import com.numeron.wandroid.R
@@ -29,6 +32,8 @@ fun Context.startArticleListActivity(chapterId: Int) {
 
 class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
 
+    private val adapter = ArticleAdapter()
+
     override val chapterId: Int by ActivityExtraDelegate(0)
 
     private val articleListViewModel: ArticleListViewModel by lazyViewModel(this)
@@ -41,7 +46,6 @@ class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
         articleListToolbar.setNavigationOnClickListener {
             finish()
         }
-        val adapter = ArticleAdapter()
         articleListRecyclerView.adapter = adapter
         articleListRecyclerView.addItemDecoration(SpaceItemDecoration(4.dp))
         //仅在有网络的情况下，允许刷新
@@ -49,8 +53,7 @@ class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
         articleListRefreshLayout.isEnabled = connectivityManager.isDefaultNetworkActive
         //替换默认的加载动画
         articleListStatusLayout.setLoadingOperation(articleListRefreshLayout::setRefreshing)
-        articleListViewModel.articleListLiveData.observe(this, Observer(adapter::submitList))
-        articleListViewModel.loadStateLiveData.observe(this, StatefulLayoutMessageObserver(articleListStatusLayout))
+        articleListViewModel.articleListLiveData.observe(this, StatefulObserver(ArticleStatefulCallback()))
     }
 
     private inner class ArticleAdapter : PagedBindingAdapter<Article,
@@ -71,6 +74,34 @@ class ArticleListActivity : BaseActivity(), ArticleListParamProvider {
                 }
             }
         }
+    }
+
+    private inner class ArticleStatefulCallback : StatefulCallback<PagedList<Article>> {
+
+        override fun onSuccess(value: PagedList<Article>) {
+            eLog("onSuccess, value = [${value}]")
+            adapter.submitList(value)
+            articleListRefreshLayout.isRefreshing = false
+            articleListStatusLayout.state = if (value.isEmpty()) State.Empty else State.Success
+        }
+
+        override fun onLoading(message: String, progress: Float) {
+            eLog("onLoading, message = [${message}], progress = [${progress}]")
+            articleListStatusLayout.setLoadingText(message)
+            articleListStatusLayout.state = State.Loading
+        }
+
+        override fun onFailure(message: String, cause: Throwable) {
+            eLog("onFailure, message = [${message}], cause = [${cause}]")
+            articleListStatusLayout.setFailureText(message)
+            articleListStatusLayout.state = State.Failure
+            articleListRefreshLayout.isRefreshing = false
+        }
+
+        override fun onMessage(message: String) {
+            toast(message)
+        }
+
     }
 
 }
