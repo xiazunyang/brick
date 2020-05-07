@@ -9,7 +9,7 @@ internal data class StatefulImpl<T>(
         internal val progress: Float = -1f,
         internal val message: String? = null,
         internal val version: Int = 0,
-        internal val previous: Int = 0
+        internal var previous: Int = 0
 ) : Stateful<T> {
 
     override fun onSuccess(c: (T) -> Unit): Stateful<T> {
@@ -35,6 +35,7 @@ internal data class StatefulImpl<T>(
 
     override fun onMessage(c: (String) -> Unit): Stateful<T> {
         if (version > previous && message != null) {
+            previous = version
             c(message)
         }
         return this

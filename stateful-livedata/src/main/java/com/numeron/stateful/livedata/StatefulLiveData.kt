@@ -8,7 +8,7 @@ class StatefulLiveData<T> @JvmOverloads constructor(
         private val failure: String = "加载失败"
 ) : LiveData<Stateful<T>>() {
 
-    private val impl: StatefulImpl<T>
+    private val valueOrDefault: StatefulImpl<T>
         get() = getValue() as? StatefulImpl ?: StatefulImpl(State.Empty)
 
     val value: T?
@@ -25,15 +25,15 @@ class StatefulLiveData<T> @JvmOverloads constructor(
 
     @JvmOverloads
     fun postLoading(message: String = this.loading, progress: Float = -1f) {
-        postValue(impl.copy(state = State.Loading, progress = progress, message = message))
+        postValue(valueOrDefault.copy(state = State.Loading, progress = progress, message = message))
     }
 
     fun postSuccess(value: T) {
-        postValue(impl.copy(state = State.Success, success = value))
+        postValue(valueOrDefault.copy(state = State.Success, success = value))
     }
 
     fun postFailure(cause: Throwable, message: String = this.failure) {
-        postValue(impl.copy(state = State.Failure, failure = cause, message = message))
+        postValue(valueOrDefault.copy(state = State.Failure, failure = cause, message = message))
     }
 
     fun postFailure(cause: Throwable) {
@@ -41,7 +41,7 @@ class StatefulLiveData<T> @JvmOverloads constructor(
     }
 
     fun postMessage(message: String) {
-        postValue(impl.copy(message = message, previous = impl.version, version = impl.version + 1))
+        postValue(valueOrDefault.copy(message = message, version = valueOrDefault.version + 1))
     }
 
     companion object {
