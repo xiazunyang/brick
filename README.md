@@ -1,5 +1,6 @@
 ###### 此项目是我个人在工作(Android开发)中不断总结、抽象而来，囊括了架构、网络、线程、UI等，每个功能都单独整理到一个模块之中，可以单独引用。看得上哪个模块，按需自取，更欢迎不吝赐教。       
   
+  ![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)
 
 ### 模块功能介绍
 
@@ -58,13 +59,13 @@ allprojects {
 
 模块|依赖
 ---|---
-adapter|implementation 'com.github.xiazunyang.brick:adapter:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-brick|implementation 'com.github.xiazunyang.brick:brick:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-chameleon|implementation 'com.github.xiazunyang.brick:chameleon:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-context-util|implementation 'com.github.xiazunyang.brick:context-util:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-delegate|implementation 'com.github.xiazunyang.brick:delegate:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-http|implementation 'com.github.xiazunyang.brick:http:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-result|implementation 'com.github.xiazunyang.brick:result:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-rx|implementation 'com.github.xiazunyang.brick:rx:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
-stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)'
+adapter|implementation 'com.github.xiazunyang.brick:adapter:1.6.1'
+brick|implementation 'com.github.xiazunyang.brick:brick:1.6.1'
+chameleon|implementation 'com.github.xiazunyang.brick:chameleon:1.6.1'
+context-util|implementation 'com.github.xiazunyang.brick:context-util:1.6.1'
+delegate|implementation 'com.github.xiazunyang.brick:delegate:1.6.1'
+http|implementation 'com.github.xiazunyang.brick:http:1.6.1'
+result|implementation 'com.github.xiazunyang.brick:result:1.6.1'
+rx|implementation 'com.github.xiazunyang.brick:rx:1.6.1'
+stateful-layout|implementation 'com.github.xiazunyang.brick:stateful-layout:1.6.1'
+stateful-livedata|implementation 'com.github.xiazunyang.brick:stateful-livedata:1.6.1'
