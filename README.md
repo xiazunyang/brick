@@ -1,3 +1,5 @@
+### **此git仓库已停止更新，其中的若干个模块将被拆分为多个仓库，详情请[点击此处](https://github.com/xiazunyang?tab=repositories)查看。**
+
 ###### 此项目是我个人在工作(Android开发)中不断总结、抽象而来，囊括了架构、网络、线程、UI等，每个功能都单独整理到一个模块之中，可以单独引用。看得上哪个模块，按需自取，更欢迎不吝赐教。       
   
   ![jitpack](https://jitpack.io/v/xiazunyang/brick.svg)
